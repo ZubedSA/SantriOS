@@ -1,9 +1,0 @@
-# Cloudflare Pages Configuration for SantriOS Monorepo
-name = "santrios"
-pages_build_output_dir = "apps/web/.open-next/assets"
-compatibility_date = "2025-09-19"
-compatibility_flags = ["nodejs_compat"]
-
-[vars]
-NEXT_PUBLIC_APP_URL = "https://santrios.id"
-NODE_ENV = "production"
