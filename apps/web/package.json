@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",
-    "build:cloudflare": "npx @opennextjs/cloudflare",
-    "preview:cloudflare": "npx @opennextjs/cloudflare && wrangler pages dev .open-next/assets",
-    "deploy:cloudflare": "npx @opennextjs/cloudflare && wrangler pages deploy .open-next/assets",
+    "build:cloudflare": "npx @opennextjs/cloudflare build",
+    "preview:cloudflare": "npx @opennextjs/cloudflare preview",
+    "deploy:cloudflare": "npx @opennextjs/cloudflare deploy",
     "start": "next start --port 3000",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
