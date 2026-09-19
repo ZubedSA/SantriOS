@@ -1,0 +1,12 @@
+{
+  "extends": "../../tooling/typescript/base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@santrios/utils": ["../utils/src"],
+      "@santrios/utils/*": ["../utils/src/*"]
+    }
+  },
+  "include": ["src"]
+}

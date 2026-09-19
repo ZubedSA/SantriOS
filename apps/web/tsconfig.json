@@ -1,0 +1,25 @@
+{
+  "extends": "../../tooling/typescript/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@santrios/ui": ["../../packages/ui/src"],
+      "@santrios/ui/*": ["../../packages/ui/src/*"],
+      "@santrios/database": ["../../packages/database/src"],
+      "@santrios/database/*": ["../../packages/database/src/*"],
+      "@santrios/auth": ["../../packages/auth/src"],
+      "@santrios/auth/*": ["../../packages/auth/src/*"],
+      "@santrios/modules": ["../../packages/modules/src"],
+      "@santrios/modules/*": ["../../packages/modules/src/*"],
+      "@santrios/types": ["../../packages/types/src"],
+      "@santrios/types/*": ["../../packages/types/src/*"],
+      "@santrios/utils": ["../../packages/utils/src"],
+      "@santrios/utils/*": ["../../packages/utils/src/*"],
+      "@santrios/validators": ["../../packages/validators/src"],
+      "@santrios/validators/*": ["../../packages/validators/src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

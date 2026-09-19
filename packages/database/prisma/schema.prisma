@@ -1,0 +1,452 @@
+// SantriOS Multi-Tenant Database Schema
+// Optimized for Neon PostgreSQL
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// -------------------------------------------------------------
+// Core Multi-Tenancy Models
+// -------------------------------------------------------------
+
+model Tenant {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  name        String
+  tagline     String?
+  phone       String?
+  email       String?
+  address     String?
+  city        String?
+  province    String?
+  logoUrl     String?
+  status      String         @default("ACTIVE") // ACTIVE, SUSPENDED, TRIAL, INACTIVE
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  // Relationships
+  userRoles     UserRole[]
+  roles         Role[]
+  tenantModules TenantModule[]
+  subscriptions Subscription[]
+  auditLogs     AuditLog[]
+  notifications Notification[]
+
+  // MVP Business Domain Models (Section 7 & 11-17 of Master Prompt)
+  classrooms     Classroom[]
+  dormitoryRooms DormitoryRoom[]
+  students       Student[]
+  hafalanRecords HafalanRecord[]
+  attendance     AttendanceRecord[]
+  invoices       Invoice[]
+  transactions   Transaction[]
+  permits        Permit[]
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  passwordHash String
+  name         String
+  phone        String?
+  avatarUrl    String?
+  status       String         @default("ACTIVE") // ACTIVE, INACTIVE, PENDING
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  // Relationships
+  userRoles       UserRole[]
+  auditLogs       AuditLog[]
+  notifications   Notification[]
+  guidedHafalan   HafalanRecord[] @relation("MentorHafalan")
+  approvedPermits Permit[]        @relation("ApprovedPermits")
+
+  @@index([email])
+  @@index([status])
+}
+
+// -------------------------------------------------------------
+// Role-Based Access Control (RBAC) & Permissions
+// -------------------------------------------------------------
+
+model Role {
+  id          String           @id @default(cuid())
+  tenantId    String?          // null indicates SaaS global system role (e.g. SUPER_ADMIN)
+  name        String           // SUPER_ADMIN, OWNER, ADMIN, BENDAHARA, GURU, etc.
+  description String?
+  isSystem    Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+
+  tenant      Tenant?          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userRoles   UserRole[]
+  permissions RolePermission[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  key         String           @unique // e.g. "students.view", "finance.create"
+  name        String
+  moduleKey   String           // CORE, SANTRI, KEUANGAN, etc.
+  description String?
+
+  roles       RolePermission[]
+
+  @@index([moduleKey])
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  tenantId  String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tenantId, roleId])
+  @@index([userId])
+  @@index([tenantId])
+  @@index([roleId])
+  @@index([tenantId, userId])
+}
+
+// -------------------------------------------------------------
+// Modular System & Feature Flags
+// -------------------------------------------------------------
+
+model Module {
+  id          String         @id @default(cuid())
+  key         String         @unique // CORE, SANTRI, KEUANGAN, ABSENSI, TAHFIZH, etc.
+  name        String
+  description String
+  icon        String
+  isCore      Boolean        @default(false)
+  isActive    Boolean        @default(true)
+
+  tenantModules TenantModule[]
+
+  @@index([key])
+}
+
+model TenantModule {
+  id          String    @id @default(cuid())
+  tenantId    String
+  moduleId    String
+  enabled     Boolean   @default(true)
+  activatedAt DateTime  @default(now())
+  settings    Json?     // tenant-specific module configurations
+
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  module      Module    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, moduleId])
+  @@index([tenantId])
+  @@index([moduleId])
+  @@index([tenantId, enabled])
+}
+
+// -------------------------------------------------------------
+// Plans & Subscriptions Foundation
+// -------------------------------------------------------------
+
+model Plan {
+  id          String         @id @default(cuid())
+  key         String         @unique // FREE, STARTER, PRO, ENTERPRISE
+  name        String
+  priceMonth  Int            @default(0)
+  maxStudents Int            @default(100)
+  features    Json?
+  createdAt   DateTime       @default(now())
+
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id        String    @id @default(cuid())
+  tenantId  String
+  planId    String
+  status    String    @default("ACTIVE") // ACTIVE, PAST_DUE, CANCELLED
+  currentPeriodStart DateTime @default(now())
+  currentPeriodEnd   DateTime
+  createdAt DateTime  @default(now())
+
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  plan      Plan      @relation(fields: [planId], references: [id], onDelete: Restrict)
+
+  @@index([tenantId])
+  @@index([status])
+}
+
+// -------------------------------------------------------------
+// Audit Log & Notifications
+// -------------------------------------------------------------
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  tenantId  String
+  userId    String?
+  action    String   // CREATE_STUDENT, APPROVE_PERMISSION, TOGGLE_MODULE, etc.
+  entity    String   // Student, User, Module, Transaction
+  entityId  String
+  oldData   Json?
+  newData   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId])
+  @@index([tenantId, entity])
+  @@index([tenantId, createdAt])
+  @@index([tenantId, userId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  tenantId  String
+  userId    String
+  type      String    // INFO, WARNING, SUCCESS, ALERT
+  title     String
+  message   String
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([tenantId, userId])
+  @@index([tenantId, readAt])
+}
+
+// -------------------------------------------------------------
+// MVP Domain Models: Santri, Akademik & Asrama (Section 11, 15, 16)
+// -------------------------------------------------------------
+
+model Classroom {
+  id           String    @id @default(cuid())
+  tenantId     String
+  name         String    // e.g. "Ulya 1", "Ulya 2", "Wustha 1"
+  level        String    // "SMA", "SMP", "Aliyah", "Tsanawiyah"
+  academicYear String    @default("2026/2027")
+  createdAt    DateTime  @default(now())
+
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  students     Student[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+}
+
+model DormitoryRoom {
+  id        String    @id @default(cuid())
+  tenantId  String
+  name      String    // e.g. "Kamar A-01 (Abu Bakar)"
+  building  String    // e.g. "Gedung Al-Faruq"
+  capacity  Int       @default(10)
+  createdAt DateTime  @default(now())
+
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  students  Student[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+}
+
+model Student {
+  id               String            @id @default(cuid())
+  tenantId         String
+  nis              String
+  nisn             String?
+  name             String
+  nickname         String?
+  gender           String            // LAKI_LAKI, PEREMPUAN
+  birthPlace       String?
+  birthDate        DateTime?
+  address          String?
+  phone            String?
+  status           String            @default("AKTIF") // AKTIF, IZIN, SAKIT, LULUS, KELUAR
+  photoUrl         String?
+  joinedAt         DateTime          @default(now())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  classroomId      String?
+  classroom        Classroom?        @relation(fields: [classroomId], references: [id], onDelete: SetNull)
+  dormitoryRoomId  String?
+  dormitoryRoom    DormitoryRoom?    @relation(fields: [dormitoryRoomId], references: [id], onDelete: SetNull)
+
+  // Guardian Info
+  guardianName     String?
+  guardianPhone    String?
+  guardianRelation String?           // AYAH, IBU, WALI
+
+  tenant           Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  hafalanRecords   HafalanRecord[]
+  attendance       AttendanceRecord[]
+  invoices         Invoice[]
+  transactions     Transaction[]
+  permits          Permit[]
+
+  @@unique([tenantId, nis])
+  @@index([tenantId])
+  @@index([tenantId, name])
+  @@index([tenantId, status])
+  @@index([tenantId, classroomId])
+  @@index([tenantId, dormitoryRoomId])
+  @@index([tenantId, status, classroomId])
+}
+
+// -------------------------------------------------------------
+// MVP Domain Models: Tahfizh & Absensi (Section 13, 14)
+// -------------------------------------------------------------
+
+model HafalanRecord {
+  id         String   @id @default(cuid())
+  tenantId   String
+  studentId  String
+  surah      String
+  ayahStart  Int?
+  ayahEnd    Int?
+  juz        Int
+  grade      String   // MUMTAZ, JAYYID_JIDDAN, JAYYID, MAQBUL
+  notes      String?
+  mentorId   String?
+  createdAt  DateTime @default(now())
+
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  mentor     User?    @relation("MentorHafalan", fields: [mentorId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId])
+  @@index([tenantId, studentId])
+  @@index([tenantId, juz])
+  @@index([tenantId, createdAt])
+}
+
+model AttendanceRecord {
+  id        String   @id @default(cuid())
+  tenantId  String
+  studentId String
+  date      DateTime @default(now())
+  type      String   // SHALAT_SUBUH, SHALAT_ZHUHUR, SHALAT_ASHAR, SHALAT_MAGHRIB, SHALAT_ISYA, KELAS, HALAQAH
+  status    String   // HADIR, SAKIT, IZIN, ALFA
+  notes     String?
+
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([tenantId, studentId])
+  @@index([tenantId, date])
+  @@index([tenantId, type, date])
+}
+
+// -------------------------------------------------------------
+// MVP Domain Models: Keuangan & Tagihan (Section 12)
+// -------------------------------------------------------------
+
+model Invoice {
+  id           String        @id @default(cuid())
+  tenantId     String
+  studentId    String
+  title        String        // e.g. "SPP Syahriyah September 2026"
+  category     String        // SPP, UANG_MAKAN, SERAGAM, DAFTAR_ULANG
+  amount       Int
+  dueDate      DateTime
+  status       String        @default("UNPAID") // UNPAID, PAID, OVERDUE, CANCELLED
+  paidAt       DateTime?
+  createdAt    DateTime      @default(now())
+
+  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  student      Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@index([tenantId])
+  @@index([tenantId, studentId])
+  @@index([tenantId, status])
+  @@index([tenantId, dueDate])
+  @@index([tenantId, status, dueDate])
+  @@index([tenantId, category])
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  tenantId    String
+  receiptNo   String
+  type        String   // INCOME, EXPENSE
+  category    String   // SPP, KATERING, BELANJA_DAPUR, OPERASIONAL, GAJI
+  amount      Int
+  method      String   // CASH, TRANSFER, QRIS, VA
+  description String?
+  studentId   String?
+  invoiceId   String?
+  createdAt   DateTime @default(now())
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  student     Student? @relation(fields: [studentId], references: [id], onDelete: SetNull)
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+
+  @@unique([tenantId, receiptNo])
+  @@index([tenantId])
+  @@index([tenantId, type])
+  @@index([tenantId, createdAt])
+  @@index([tenantId, type, createdAt])
+}
+
+// -------------------------------------------------------------
+// MVP Domain Models: Perizinan Santri (Section 17)
+// -------------------------------------------------------------
+
+model Permit {
+  id           String    @id @default(cuid())
+  tenantId     String
+  studentId    String
+  type         String    // IZIN_KELUAR, IZIN_PULANG, SAKIT
+  reason       String
+  startDate    DateTime
+  endDate      DateTime
+  status       String    @default("PENDING") // PENDING, APPROVED, REJECTED, COMPLETED
+  approvedById String?
+  createdAt    DateTime  @default(now())
+
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  student      Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  approvedBy   User?     @relation("ApprovedPermits", fields: [approvedById], references: [id], onDelete: SetNull)
+
+  @@index([tenantId])
+  @@index([tenantId, studentId])
+  @@index([tenantId, status])
+  @@index([tenantId, createdAt])
+  @@index([tenantId, status, createdAt])
+}
+

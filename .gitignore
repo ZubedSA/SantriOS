@@ -1,0 +1,30 @@
+# dependencies
+node_modules
+.pnpm-store
+pnpm.exe
+
+# next.js
+.next/
+out/
+
+# turbo
+.turbo
+
+# prisma
+*.db
+*.db-journal
+
+# env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# test & coverage
+coverage/
+
+# OS & editor files
+.DS_Store
+*.pem
+Thumbs.db

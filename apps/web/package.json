@@ -1,0 +1,40 @@
+{
+  "name": "@santrios/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "build:cloudflare": "opennextjs-cloudflare",
+    "preview:cloudflare": "opennextjs-cloudflare && wrangler pages dev .open-next/assets",
+    "deploy:cloudflare": "opennextjs-cloudflare && wrangler pages deploy .open-next/assets",
+    "start": "next start --port 3000",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@santrios/auth": "workspace:*",
+    "@santrios/database": "workspace:*",
+    "@santrios/modules": "workspace:*",
+    "@santrios/types": "workspace:*",
+    "@santrios/ui": "workspace:*",
+    "@santrios/utils": "workspace:*",
+    "@santrios/validators": "workspace:*",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.439.0",
+    "next": "14.2.10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.2"
+  },
+  "devDependencies": {
+    "@santrios/typescript-config": "workspace:*",
+    "@types/node": "^20.16.5",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.45",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4"
+  }
+}

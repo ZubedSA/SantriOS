@@ -1,0 +1,21 @@
+{
+  "name": "santrios",
+  "private": true,
+  "packageManager": "pnpm@9.1.0",
+  "scripts": {
+    "build": "node node_modules/turbo/bin/turbo run build",
+    "dev": "node node_modules/turbo/bin/turbo run dev",
+    "lint": "node node_modules/turbo/bin/turbo run lint",
+    "test": "node node_modules/turbo/bin/turbo run test",
+    "typecheck": "node node_modules/turbo/bin/turbo run typecheck",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "db:generate": "node node_modules/prisma/build/index.js generate --schema=packages/database/prisma/schema.prisma",
+    "db:push": "node node_modules/prisma/build/index.js db push --schema=packages/database/prisma/schema.prisma",
+    "db:seed": "node node_modules/tsx/dist/cli.mjs packages/database/prisma/seed.ts"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "turbo": "^2.0.0",
+    "typescript": "^5.5.4"
+  }
+}

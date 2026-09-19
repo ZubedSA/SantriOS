@@ -1,0 +1,15 @@
+{
+  "extends": "../../tooling/typescript/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@santrios/types": ["../types/src"],
+      "@santrios/types/*": ["../types/src/*"],
+      "@santrios/utils": ["../utils/src"],
+      "@santrios/utils/*": ["../utils/src/*"],
+      "@santrios/database": ["../database/src"],
+      "@santrios/database/*": ["../database/src/*"]
+    }
+  },
+  "include": ["src"]
+}

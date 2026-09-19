@@ -1,0 +1,26 @@
+{
+  "name": "@santrios/database",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts",
+    "test": "tsx tests/tenant-isolation.test.ts && tsx tests/domain-persistence.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.19.1",
+    "@santrios/types": "workspace:*",
+    "@santrios/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@santrios/typescript-config": "workspace:*",
+    "@santrios/validators": "workspace:*",
+    "prisma": "^5.19.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4"
+  }
+}
