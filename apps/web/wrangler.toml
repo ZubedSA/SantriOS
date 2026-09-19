@@ -1,14 +1,9 @@
 # Cloudflare Pages Configuration for SantriOS Web
-# Used with Cloudflare Pages Git Integration
 name = "santrios"
 pages_build_output_dir = ".open-next/assets"
 compatibility_date = "2025-09-19"
 compatibility_flags = ["nodejs_compat"]
 
-# Public / default environment variables for Cloudflare Edge
 [vars]
-NEXT_PUBLIC_APP_URL = "https://santrios.id"
+NEXT_PUBLIC_APP_URL = "https://santrios.pages.dev"
 NODE_ENV = "production"
-
-# Note: Secret variables (DATABASE_URL, DIRECT_URL, AUTH_SECRET)
-# should be added securely in Cloudflare Dashboard -> Pages -> Settings -> Environment Variables.
