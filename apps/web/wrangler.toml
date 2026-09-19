@@ -1,7 +1,7 @@
 # Cloudflare Pages / Workers Configuration for SantriOS Web
 name = "santrios-web"
 pages_build_output_dir = ".open-next/assets"
-compatibility_date = "2024-09-01"
+compatibility_date = "2025-09-19"
 compatibility_flags = ["nodejs_compat"]
 
 # Public / default environment variables for Cloudflare Edge
