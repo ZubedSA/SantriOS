@@ -65,3 +65,44 @@ A feature is complete only if:
   - **SUPER_ADMIN**: SaaS multi-tenant governance (tenant registry, subscription tiers, platform audit, system health).
 - **Contextual Navigation**: Desktop sidebar and mobile bottom bar must adapt links based on active user role and active tenant modules.
 
+## 10. Invarian Struktur Role & Navigasi (Sesuai SantriOS_Role_Fitur_Halaman.md)
+Setiap tampilan dan navigasi harus merujuk pada hierarki resmi 5 area utama:
+1. **Kiai / Pengasuh (Executive Mode)**:
+   - Fokus: Monitor → Review → Approve → Decide → Evaluate.
+   - Menu: Dashboard, Kondisi Pesantren (Radar), Santri (360), Akademik, Tahfizh, Keuangan, Kesantrian, Persetujuan, Laporan, Notifikasi, Pengaturan.
+   - Mobile: Dashboard | Kondisi | Persetujuan | Laporan | Pengaturan.
+2. **Admin / TU / Sekretaris (Administration Mode)**:
+   - Fokus: Input → Kelola → Verifikasi → Arsipkan → Laporkan.
+   - Menu Terkelompok:
+     - Data (Santri, Wali Santri, Guru & Staff, Master Data)
+     - Administrasi (Surat, Dokumen, Perizinan, Disposisi)
+     - Akademik (Kelas, Jadwal, Absensi)
+     - PPDB
+     - Keuangan (Tagihan, Pembayaran)
+     - Kegiatan & Pengumuman
+     - Laporan & Pengaturan
+3. **Guru / Ustadz (Teaching Mode)**:
+   - Fokus: Mengajar → Memantau → Menilai → Membina → Berkomunikasi.
+   - Menu: Dashboard, Jadwal Saya, Kelas Saya, Absensi, Nilai, Tugas, Perkembangan Santri.
+   - Assignment Tahfizh (bukan role terpisah): Mengaktifkan submenu Tahfizh (Halaqah Saya, Setoran, Murajaah, Target Hafalan, Ujian, Perkembangan Santri, Laporan).
+   - Data finansial dan data sensitif keluarga tidak boleh tampil untuk role Guru.
+4. **Bendahara (Finance Mode)**:
+   - Fokus: Tagihan → Pembayaran → Pemasukan → Pengeluaran → Rekonsiliasi → Laporan.
+   - Menu Terkelompok: Keuangan (Kas, Bank, Transfer), Tagihan (Massal, Tunggakan), Pembayaran (Verifikasi, Kwitansi), Pengajuan (Approval Kiai), Rekonsiliasi, Anggaran, Laporan.
+5. **Kesantrian (Student Development & Discipline)**:
+   - Nama bagian adalah **Kesantrian** (bukan Musyrif).
+   - Menu Terkelompok: Kedisiplinan (Pelanggaran, Poin Konfigurasi, Prestasi, Pembinaan, Tindakan), Perizinan (Pengajuan, Persetujuan, Belum Kembali), Asrama (Gedung, Kamar, Mutasi), Kegiatan Santri, Laporan.
+
+## 11. Invarian Dedicated Route & Fitur Khusus (Anti-Query-Tab Fallacy)
+- **Setiap Item Navigasi Wajib Memiliki Halaman Rute Khusus**: Dilarang mengarahkan menu utama sidebar atau bottom navbar hanya ke query string tab (`/dashboard?tab=...`).
+- **Rute Mandiri**: Setiap tombol harus memiliki subhalaman resmi di App Router (contoh: `/dashboard/surat`, `/dashboard/dokumen`, `/dashboard/perizinan`, `/dashboard/disposisi`, `/dashboard/ppdb`, `/dashboard/guru-staf`, `/dashboard/wali-santri`, `/dashboard/master`, `/dashboard/kelas`, `/dashboard/jadwal`, `/dashboard/nilai`, `/dashboard/tugas`, `/dashboard/tahfizh`, `/dashboard/pelanggaran`, `/dashboard/prestasi`, `/dashboard/pembinaan`, `/dashboard/tindakan`, `/dashboard/asrama`, `/dashboard/kegiatan`, `/dashboard/pengumuman`, `/dashboard/laporan`, `/dashboard/kondisi`, `/dashboard/persetujuan`, `/dashboard/notifikasi`, `/dashboard/finance/pengajuan`, `/dashboard/finance/rekonsiliasi`, `/dashboard/finance/anggaran`, `/dashboard/finance/pengaturan`).
+- **Kelengkapan Fitur & Interaktivitas**: Setiap halaman rute wajib menyediakan fitur fungsional, filter pencarian, tabel data, aksi operasional, dan dialog preview dokumen yang siap digunakan oleh pengguna.
+
+## 12. Invarian Fitur CRUD Lengkap pada Sub-Halaman Entitas
+- **Full CRUD Requirement**: Setiap sub-halaman pengelolaan entitas wajib mendukung 4 operasi lengkap:
+  1. **Create**: Tombol tambah di header atau form terdedikasi + modal input dengan validasi dan penambahan instan ke state.
+  2. **Read**: Tampilan tabel / card responsive dengan live real-time search dan filter status/kategori.
+  3. **Update**: Tombol edit ikon `Edit3` pada tiap baris/kartu + modal pre-populated form untuk memperbarui data di state.
+  4. **Delete**: Tombol hapus ikon `Trash2` dengan konfirmasi dialog aman (`confirm`) dan pembersihan item dari state.
+  5. **Feedback Toast**: Setiap mutasi (Create, Update, Delete) wajib memicu visual feedback berupa banner notifikasi toast yang otomatis hilang atau bisa ditutup manual.
+

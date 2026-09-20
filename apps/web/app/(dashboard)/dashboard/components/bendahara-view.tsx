@@ -45,25 +45,54 @@ export function BendaharaView({
   initialTab,
 }: BendaharaViewProps) {
   const [activeTab, setActiveTab] = useState<
-    "ringkasan" | "tagihan_massal" | "tunggakan" | "kasir" | "pengajuan" | "kas_bank"
+    | "ringkasan"
+    | "tagihan_massal"
+    | "tunggakan"
+    | "kasir"
+    | "pengajuan"
+    | "kas_bank"
+    | "rekonsiliasi"
+    | "anggaran"
+    | "laporan"
+    | "pengaturan_keuangan"
   >(
-    initialTab === "billing" || initialTab === "tagihan" || initialTab === "massal"
+    initialTab === "billing" || initialTab === "tagihan" || initialTab === "tagihan_massal" || initialTab === "massal"
       ? "tagihan_massal"
       : initialTab === "tunggakan"
       ? "tunggakan"
-      : initialTab === "kasir"
+      : initialTab === "kasir" || initialTab === "semua_bayar" || initialTab === "menunggu_verifikasi" || initialTab === "terverifikasi"
       ? "kasir"
-      : initialTab === "pengajuan"
+      : initialTab === "pengajuan" || initialTab === "menunggu_approval" || initialTab === "riwayat_pengajuan"
       ? "pengajuan"
-      : initialTab === "kas" || initialTab === "kas_bank"
+      : initialTab === "kas" || initialTab === "kas_bank" || initialTab === "bank" || initialTab === "transfer"
       ? "kas_bank"
+      : initialTab === "rekonsiliasi"
+      ? "rekonsiliasi"
+      : initialTab === "anggaran"
+      ? "anggaran"
+      : initialTab === "laporan"
+      ? "laporan"
+      : initialTab === "pengaturan_keuangan"
+      ? "pengaturan_keuangan"
       : "ringkasan"
   );
 
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    if (initialTab && ["ringkasan", "tagihan_massal", "tunggakan", "kasir", "pengajuan", "kas_bank"].includes(initialTab)) {
+    const validTabs = [
+      "ringkasan",
+      "tagihan_massal",
+      "tunggakan",
+      "kasir",
+      "pengajuan",
+      "kas_bank",
+      "rekonsiliasi",
+      "anggaran",
+      "laporan",
+      "pengaturan_keuangan",
+    ];
+    if (initialTab && validTabs.includes(initialTab)) {
       setActiveTab(initialTab as any);
     }
   }, [initialTab]);
@@ -297,15 +326,19 @@ export function BendaharaView({
           </p>
         </div>
 
-        {/* 6 Tab Navigasi Bendahara (Section 7.12 of Spec) */}
+        {/* Menu Navigasi Bendahara (Section 7.12 of Spec) */}
         <div className="relative z-10 mt-6 pt-4 border-t border-emerald-800/40 flex flex-wrap gap-2">
           {[
-            { id: "ringkasan", label: "Dashboard Kas & Mutasi", icon: Wallet },
-            { id: "tagihan_massal", label: "Buat Tagihan Massal", icon: Receipt },
-            { id: "tunggakan", label: "Rekap Tunggakan & WA", icon: AlertTriangle, count: arrearsList.length },
-            { id: "kasir", label: "Kasir Pembayaran Cepat", icon: CreditCard },
-            { id: "pengajuan", label: "Pengajuan Pengeluaran (Approval Kiai)", icon: ArrowDownCircle, count: expenseList.filter((e) => e.status === "MENUNGGU_APPROVAL_KIAI").length },
-            { id: "kas_bank", label: "Kas & Bank Pesantren", icon: Building },
+            { id: "ringkasan", label: "Dashboard", icon: Wallet },
+            { id: "tagihan_massal", label: "Tagihan Massal", icon: Receipt },
+            { id: "tunggakan", label: "Tunggakan", icon: AlertTriangle, count: arrearsList.length },
+            { id: "kasir", label: "Kasir Pembayaran", icon: CreditCard },
+            { id: "pengajuan", label: "Pengajuan Pengeluaran", icon: ArrowDownCircle, count: expenseList.filter((e) => e.status === "MENUNGGU_APPROVAL_KIAI").length },
+            { id: "kas_bank", label: "Kas & Bank", icon: Building },
+            { id: "rekonsiliasi", label: "Rekonsiliasi Bank", icon: CheckCircle2 },
+            { id: "anggaran", label: "Anggaran", icon: FileSpreadsheet },
+            { id: "laporan", label: "Laporan Keuangan", icon: FileText },
+            { id: "pengaturan_keuangan", label: "Pengaturan", icon: Layers },
           ].map((tab) => {
             const Icon = tab.icon;
             const isSel = activeTab === tab.id;
@@ -313,7 +346,7 @@ export function BendaharaView({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
                   isSel
                     ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
                     : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
@@ -758,6 +791,157 @@ export function BendaharaView({
               <p className="text-[11px] text-slate-500">No. Rek: 123-456-7890</p>
             </Card>
           </div>
+        </div>
+      )}
+
+      {/* ================= TAB: REKONSILIASI BANK (Section 7.9) ================= */}
+      {activeTab === "rekonsiliasi" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-cyan-600" />
+              Rekonsiliasi Transaksi Bank vs SantriOS (Section 7.9)
+            </h3>
+            <button
+              onClick={() => alert("Menjalankan pencocokan otomatis mutasi rekening...")}
+              className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-semibold"
+            >
+              Sinkronkan Mutasi Bank
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              { desc: "Transfer SPP Syahriyah - An. Muhammad Ali Al-Fatih", amount: 500000, bankDate: "Hari Ini, 09.15 WIB", systemDate: "Hari Ini, 09.16 WIB", status: "COCOK" },
+              { desc: "Penerimaan Biaya Seragam - An. Ahmad Fauzan", amount: 450000, bankDate: "Kemarin, 14.20 WIB", systemDate: "Kemarin, 14.20 WIB", status: "COCOK" },
+              { desc: "Transfer Masuk Tanpa Keterangan NIS", amount: 250000, bankDate: "Kemarin, 11.00 WIB", systemDate: "-", status: "PERLU_PEMERIKSAAN" },
+            ].map((r, i) => (
+              <Card key={i} className="p-4 space-y-2 border-slate-200 text-xs">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="font-bold text-slate-900">{r.desc}</h4>
+                    <p className="text-slate-500 text-[11px] mt-0.5">Waktu Bank: {r.bankDate} • Waktu SantriOS: {r.systemDate}</p>
+                  </div>
+                  <Badge variant={r.status === "COCOK" ? "success" : "warning"} className="text-[10px]">
+                    {r.status}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center pt-1">
+                  <span className="text-slate-400">Nominal Mutasi:</span>
+                  <span className="font-bold font-mono text-emerald-700">{formatRupiah(r.amount)}</span>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: ANGGARAN & BUDGETING (Section 7.10) ================= */}
+      {activeTab === "anggaran" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
+              Anggaran & Realisasi Belanja Pesantren (Section 7.10)
+            </h3>
+            <button
+              onClick={() => alert("Menambahkan pos pagu anggaran...")}
+              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold"
+            >
+              + Pos Anggaran Baru
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {[
+              { category: "Logistik & Dapur Santri", budget: 35000000, used: 24500000, pct: "70%" },
+              { category: "Utilitas Listrik, Air & Internet", budget: 10000000, used: 6850000, pct: "68%" },
+              { category: "Honor & Tunjangan Asatidz", budget: 45000000, used: 45000000, pct: "100%" },
+            ].map((b, i) => (
+              <Card key={i} className="p-4 space-y-2 border-slate-200 text-xs">
+                <span className="font-bold text-slate-900 block">{b.category}</span>
+                <div className="flex justify-between text-[11px] text-slate-500">
+                  <span>Plafon: {formatRupiah(b.budget)}</span>
+                  <span className="font-bold text-slate-800">{b.pct}</span>
+                </div>
+                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-600 rounded-full" style={{ width: b.pct }} />
+                </div>
+                <p className="text-[11px] text-slate-400">Realisasi: {formatRupiah(b.used)}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: LAPORAN KEUANGAN (Section 7.11) ================= */}
+      {activeTab === "laporan" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <FileText className="w-5 h-5 text-purple-600" />
+              Laporan Keuangan & Arus Kas (Section 7.11)
+            </h3>
+            <div className="flex gap-2">
+              <button
+                onClick={() => alert("Mengunduh Rekapitulasi (.xlsx)...")}
+                className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold"
+              >
+                Unduh Excel
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold"
+              >
+                Cetak Laporan PDF
+              </button>
+            </div>
+          </div>
+
+          <Card className="p-4 space-y-3 border-slate-200 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="p-3 bg-slate-50 rounded-xl">
+                <span className="text-[10px] text-slate-400 block">Total Pemasukan</span>
+                <span className="font-bold text-emerald-700 font-mono text-sm">Rp 64.5 jt</span>
+              </div>
+              <div className="p-3 bg-slate-50 rounded-xl">
+                <span className="text-[10px] text-slate-400 block">Total Pengeluaran</span>
+                <span className="font-bold text-rose-700 font-mono text-sm">Rp 28.4 jt</span>
+              </div>
+              <div className="p-3 bg-slate-50 rounded-xl">
+                <span className="text-[10px] text-slate-400 block">Surplus Operasional</span>
+                <span className="font-bold text-teal-700 font-mono text-sm">+ Rp 36.1 jt</span>
+              </div>
+              <div className="p-3 bg-slate-50 rounded-xl">
+                <span className="text-[10px] text-slate-400 block">Piutang SPP Santri</span>
+                <span className="font-bold text-amber-600 font-mono text-sm">Rp 12.3 jt</span>
+              </div>
+            </div>
+            <p className="text-slate-600 text-[11px] leading-relaxed">
+              Arus kas bulan berjalan dalam status likuid dan sehat. Pembukuan diverifikasi secara berkala dengan bukti fisik kuitansi serta rekening koran bank.
+            </p>
+          </Card>
+        </div>
+      )}
+
+      {/* ================= TAB: PENGATURAN KEUANGAN ================= */}
+      {activeTab === "pengaturan_keuangan" && (
+        <div className="space-y-4">
+          <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            <Layers className="w-5 h-5 text-slate-600" />
+            Pengaturan Keuangan Pesantren
+          </h3>
+          <Card className="p-4 space-y-3 border-slate-200 text-xs">
+            <p className="font-bold text-slate-900">Batas Threshold Approval Kiai</p>
+            <p className="text-slate-600 text-[11px]">
+              Setiap pengajuan pengeluaran di atas <strong>Rp 5.000.000</strong> wajib mendapatkan persetujuan digital dari Kiai sebelum dana kas dicairkan.
+            </p>
+            <div className="pt-2">
+              <span className="text-[10px] bg-emerald-50 text-emerald-800 font-semibold px-2 py-1 rounded-md border border-emerald-200">
+                Threshold Saat Ini: Rp 5.000.000 (Configured)
+              </span>
+            </div>
+          </Card>
         </div>
       )}
 

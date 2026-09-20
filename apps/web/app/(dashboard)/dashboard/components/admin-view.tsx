@@ -30,6 +30,8 @@ import {
   Award,
   Layers,
   CreditCard,
+  Bell,
+  FileSpreadsheet,
 } from "lucide-react";
 import Link from "next/link";
 import { formatRupiah } from "@santrios/utils";
@@ -58,10 +60,29 @@ export function AdminView({
   initialTab,
 }: AdminViewProps) {
   const [activeTab, setActiveTab] = useState<
-    "meja_kerja" | "surat" | "ppdb" | "guru_staf" | "wali_santri" | "master"
+    | "meja_kerja"
+    | "surat"
+    | "dokumen"
+    | "perizinan"
+    | "disposisi"
+    | "ppdb"
+    | "guru_staf"
+    | "wali_santri"
+    | "master"
+    | "kelas"
+    | "jadwal"
+    | "kegiatan"
+    | "pengumuman"
+    | "laporan"
   >(
-    initialTab === "dokumen" || initialTab === "surat"
+    initialTab === "dokumen"
+      ? "dokumen"
+      : initialTab === "surat"
       ? "surat"
+      : initialTab === "perizinan"
+      ? "perizinan"
+      : initialTab === "disposisi"
+      ? "disposisi"
       : initialTab === "ppdb"
       ? "ppdb"
       : initialTab === "guru" || initialTab === "guru_staf"
@@ -70,6 +91,16 @@ export function AdminView({
       ? "wali_santri"
       : initialTab === "master"
       ? "master"
+      : initialTab === "kelas"
+      ? "kelas"
+      : initialTab === "jadwal"
+      ? "jadwal"
+      : initialTab === "kegiatan"
+      ? "kegiatan"
+      : initialTab === "pengumuman"
+      ? "pengumuman"
+      : initialTab === "laporan"
+      ? "laporan"
       : "meja_kerja"
   );
 
@@ -77,7 +108,23 @@ export function AdminView({
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    if (initialTab && ["meja_kerja", "surat", "ppdb", "guru_staf", "wali_santri", "master"].includes(initialTab)) {
+    const validTabs = [
+      "meja_kerja",
+      "surat",
+      "dokumen",
+      "perizinan",
+      "disposisi",
+      "ppdb",
+      "guru_staf",
+      "wali_santri",
+      "master",
+      "kelas",
+      "jadwal",
+      "kegiatan",
+      "pengumuman",
+      "laporan",
+    ];
+    if (initialTab && validTabs.includes(initialTab)) {
       setActiveTab(initialTab as any);
     }
   }, [initialTab]);
@@ -328,15 +375,22 @@ export function AdminView({
           </p>
         </div>
 
-        {/* 6 Tab Navigasi Admin (Section 4.15 of Spec) */}
+        {/* Menu Navigasi Admin (Section 4.15 of Spec) */}
         <div className="relative z-10 mt-6 pt-4 border-t border-emerald-800/40 flex flex-wrap gap-2">
           {[
-            { id: "meja_kerja", label: "Meja Kerja TU", icon: Clock, count: adminDispositions.filter((d) => d.status === "DALAM_PROSES").length },
-            { id: "surat", label: "Surat & Dokumen Resmi", icon: FileText },
-            { id: "ppdb", label: "PPDB Santri Baru", icon: GraduationCap, count: ppdbApplicants.filter((p) => p.status === "LULUS_SELEKSI").length },
-            { id: "guru_staf", label: "Guru & Penugasan Assignment", icon: BookOpen },
-            { id: "wali_santri", label: "Data Wali Santri & WA", icon: Phone },
-            { id: "master", label: "Master Data Pesantren", icon: Layers },
+            { id: "meja_kerja", label: "Meja Kerja TU", icon: Clock },
+            { id: "surat", label: "Surat Resmi", icon: FileText },
+            { id: "dokumen", label: "Dokumen", icon: FileText },
+            { id: "perizinan", label: "Perizinan", icon: FileCheck },
+            { id: "disposisi", label: "Disposisi Kiai", icon: FileCheck, count: adminDispositions.filter((d) => d.status === "DALAM_PROSES").length },
+            { id: "ppdb", label: "PPDB", icon: GraduationCap, count: ppdbApplicants.filter((p) => p.status === "LULUS_SELEKSI").length },
+            { id: "guru_staf", label: "Guru & Staff", icon: BookOpen },
+            { id: "wali_santri", label: "Wali Santri", icon: Phone },
+            { id: "master", label: "Master Data", icon: Layers },
+            { id: "kelas", label: "Kelas & Jadwal", icon: Grid },
+            { id: "kegiatan", label: "Kegiatan", icon: CalendarCheck },
+            { id: "pengumuman", label: "Pengumuman", icon: Bell },
+            { id: "laporan", label: "Laporan", icon: FileSpreadsheet },
           ].map((tab) => {
             const Icon = tab.icon;
             const isSel = activeTab === tab.id;
@@ -746,6 +800,178 @@ export function AdminView({
               <p className="text-[11px] text-slate-400">Kapasitas total 460 ranjang</p>
             </Card>
           </div>
+        </div>
+      )}
+
+      {/* ================= TAB: DOKUMEN CENTER (Section 4.13) ================= */}
+      {activeTab === "dokumen" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <FileText className="w-5 h-5 text-emerald-600" />
+              Document Center & Arsip Institusi (Section 4.13)
+            </h3>
+            <button
+              onClick={() => alert("Mengunggah arsip dokumen institusi baru...")}
+              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold"
+            >
+              + Unggah Berkas Arsip
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {[
+              { name: "SK Pengangkatan Dewan Guru 2026/2027", category: "SK & Legalitas", size: "2.4 MB", date: "15 Juli 2026" },
+              { name: "Kurikulum & Silabus Pesantren Formal", category: "Akademik", size: "5.1 MB", date: "20 Agustus 2026" },
+              { name: "Data Berkas Akta & KK Santri Baru", category: "Dokumen Santri", size: "18.2 MB", date: "02 September 2026" },
+              { name: "SOP Perizinan Keluar Gerbang Pondok", category: "Tata Tertib", size: "1.1 MB", date: "10 Agustus 2026" },
+              { name: "Arsip Rekap Nilai Ujian Semester Lalu", category: "Rapor", size: "3.8 MB", date: "25 Juni 2026" },
+            ].map((doc, idx) => (
+              <Card key={idx} className="p-3.5 space-y-2 border-slate-200">
+                <div className="flex items-start justify-between gap-2">
+                  <span className="font-bold text-xs text-slate-900 line-clamp-1">{doc.name}</span>
+                  <Badge variant="outline" className="text-[10px] shrink-0">{doc.category}</Badge>
+                </div>
+                <div className="flex items-center justify-between text-[11px] text-slate-400">
+                  <span>{doc.size}</span>
+                  <span>{doc.date}</span>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: PERIZINAN ADMINISTRATIF (Section 4.8) ================= */}
+      {activeTab === "perizinan" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <FileCheck className="w-5 h-5 text-amber-500" />
+              Administrasi & Rekap Perizinan Santri (Section 4.8)
+            </h3>
+            <Link
+              href="/dashboard/activities?tab=perizinan"
+              className="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold"
+            >
+              Buka Gerbang Keluar &rarr;
+            </Link>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-amber-50/60 border border-amber-200 text-xs space-y-1">
+            <p className="font-semibold text-amber-950">Catatan Operasional TU:</p>
+            <p className="text-amber-800">
+              Admin bertugas memverifikasi kelengkapan dokumen surat keterangan izin dan mencatat kepulangan/keberangkatan fisik santri.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: DISPOSISI KIAI (Section 4.14) ================= */}
+      {activeTab === "disposisi" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <FileCheck className="w-5 h-5 text-rose-500" />
+              Tindak Lanjut Disposisi Kiai (Section 4.14)
+            </h3>
+            <span className="text-xs text-slate-400">Alur: Kiai &rarr; Disposisi &rarr; TU &rarr; Pelaksanaan</span>
+          </div>
+
+          <div className="space-y-3">
+            {adminDispositions.map((disp) => (
+              <Card key={disp.id} className="p-4 space-y-3 border-slate-200">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900">{disp.title}</h4>
+                    <p className="text-[11px] text-slate-500 mt-0.5">
+                      Dari: <strong>{disp.from}</strong> • Tenggat Waktu: <span className="text-rose-600 font-semibold">{disp.deadline}</span>
+                    </p>
+                    <p className="text-xs text-slate-600 mt-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                      Instruksi: {disp.instructions}
+                    </p>
+                  </div>
+                  <Badge variant={disp.status === "SELESAI" ? "success" : "warning"} className="text-[10px]">
+                    {disp.status}
+                  </Badge>
+                </div>
+                {disp.status !== "SELESAI" && (
+                  <button
+                    onClick={() => handleCompleteDisposition(disp.id)}
+                    className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold"
+                  >
+                    Tandai Selesai & Laporkan ke Kiai
+                  </button>
+                )}
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: KELAS & JADWAL ================= */}
+      {activeTab === "kelas" && (
+        <div className="space-y-4">
+          <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            <Grid className="w-5 h-5 text-sky-600" />
+            Pengelolaan Kelas & Jadwal Pelajaran Pesantren
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {["Ulya 1 (Aliyah Putra)", "Ulya 2 (Aliyah Putri)", "Wustha 1 (Tsanawiyah Putra)", "Wustha 2 (Tsanawiyah Putri)", "Idad Lughawi (Persiapan)"].map((k, i) => (
+              <Card key={i} className="p-3.5 space-y-2 border-slate-200">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-900">{k}</span>
+                  <Badge variant="success" className="text-[10px]">Aktif</Badge>
+                </div>
+                <p className="text-[11px] text-slate-500">Kapasitas: 32 Santri • Wali Kelas: Ustadz Fauzan, M.Pd.</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: KEGIATAN & PENGUMUMAN ================= */}
+      {(activeTab === "kegiatan" || activeTab === "pengumuman") && (
+        <div className="space-y-4">
+          <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            <CalendarCheck className="w-5 h-5 text-cyan-600" />
+            Agenda Kegiatan & Pengumuman Pesantren
+          </h3>
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 space-y-3">
+            <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-100">
+              <span className="text-xs font-bold text-emerald-950 block">Kajian Akbar Kitab Ihya Ulumuddin</span>
+              <span className="text-[11px] text-emerald-800">Setiap Ahad Pagi • Masjid Jami Pesantren • PIC: Ustadz Syarif</span>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <span className="text-xs font-bold text-slate-900 block">Jadwal Seleksi Gelombang 2 PPDB</span>
+              <span className="text-[11px] text-slate-600">Sabtu, 15 Oktober 2026 • Ruang Aula Utama • PIC: Panitia PPDB</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: LAPORAN ================= */}
+      {activeTab === "laporan" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <FileSpreadsheet className="w-5 h-5 text-purple-600" />
+              Laporan Administrasi & Rekapitulasi Pondok
+            </h3>
+            <button
+              onClick={() => window.print()}
+              className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Cetak Rekap Bulanan</span>
+            </button>
+          </div>
+          <Card className="p-4 space-y-2 border-slate-200 text-xs">
+            <p className="font-semibold text-slate-800">Laporan Administrasi Tertib:</p>
+            <p className="text-slate-600 leading-relaxed">
+              Seluruh berkas santri mukim, surat keterangan resmi, pendaftaran PPDB, dan daftar wali santri tersinkronisasi dalam basis data terpusat.
+            </p>
+          </Card>
         </div>
       )}
 

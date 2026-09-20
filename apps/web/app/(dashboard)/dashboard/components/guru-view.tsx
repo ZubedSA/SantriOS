@@ -56,15 +56,50 @@ export function GuruView({
 }: GuruViewProps) {
   const hasTahfizh = assignments.includes("GURU_TAHFIZH");
 
-  const [activeTab, setActiveTab] = useState<"jadwal" | "tahfizh" | "nilai" | "tugas">(
-    initialTab === "tahfizh" && hasTahfizh
-      ? "tahfizh"
+  const [activeTab, setActiveTab] = useState<
+    | "jadwal"
+    | "tahfizh"
+    | "nilai"
+    | "tugas"
+    | "perkembangan"
+    | "tahfizh_halaqah"
+    | "tahfizh_setoran"
+    | "tahfizh_murajaah"
+    | "tahfizh_target"
+    | "tahfizh_ujian"
+    | "tahfizh_perkembangan"
+    | "tahfizh_laporan"
+  >(
+    initialTab?.startsWith("tahfizh") && hasTahfizh
+      ? (initialTab as any)
       : initialTab === "nilai"
       ? "nilai"
       : initialTab === "tugas"
       ? "tugas"
+      : initialTab === "perkembangan"
+      ? "perkembangan"
       : "jadwal"
   );
+
+  useEffect(() => {
+    const validTabs = [
+      "jadwal",
+      "tahfizh",
+      "nilai",
+      "tugas",
+      "perkembangan",
+      "tahfizh_halaqah",
+      "tahfizh_setoran",
+      "tahfizh_murajaah",
+      "tahfizh_target",
+      "tahfizh_ujian",
+      "tahfizh_perkembangan",
+      "tahfizh_laporan",
+    ];
+    if (initialTab && validTabs.includes(initialTab)) {
+      setActiveTab(initialTab as any);
+    }
+  }, [initialTab]);
 
   const [selectedMaterial, setSelectedMaterial] = useState<ClassItem | null>(null);
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
@@ -252,45 +287,119 @@ export function GuruView({
         <div className="relative z-10 mt-6 pt-4 border-t border-emerald-800/40 flex flex-wrap gap-2">
           <button
             onClick={() => setActiveTab("jadwal")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
               activeTab === "jadwal"
                 ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
                 : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
             }`}
           >
             <Calendar className="w-3.5 h-3.5" />
-            <span>Jadwal & KBM Hari Ini</span>
+            <span>Jadwal Saya</span>
           </button>
-
-          {hasTahfizh && (
-            <button
-              onClick={() => setActiveTab("tahfizh")}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                activeTab === "tahfizh"
-                  ? "bg-amber-400 text-slate-950 font-bold shadow-md"
-                  : "bg-emerald-900/40 text-amber-300 hover:bg-emerald-900/80 border border-emerald-700/40"
-              }`}
-            >
-              <Award className="w-3.5 h-3.5" />
-              <span>Assignment: Guru Tahfizh (Halaqah & Setoran)</span>
-            </button>
-          )}
 
           <Link
             href="/dashboard/santri?tab=kelas"
-            className="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
+            className="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
           >
-            <CheckSquare className="w-3.5 h-3.5" />
-            <span>Input Nilai Rapor & Remedial</span>
+            <Users className="w-3.5 h-3.5" />
+            <span>Kelas Saya</span>
           </Link>
 
           <Link
             href="/dashboard/absensi"
-            className="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
+            className="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
           >
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Absensi Cepat KBM</span>
           </Link>
+
+          <button
+            onClick={() => setActiveTab("nilai")}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+              activeTab === "nilai"
+                ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
+                : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
+            }`}
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>Nilai Rapor</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("tugas")}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+              activeTab === "tugas"
+                ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
+                : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
+            }`}
+          >
+            <CheckSquare className="w-3.5 h-3.5" />
+            <span>Tugas</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("perkembangan")}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+              activeTab === "perkembangan"
+                ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
+                : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
+            }`}
+          >
+            <Users className="w-3.5 h-3.5" />
+            <span>Perkembangan Santri</span>
+          </button>
+
+          {hasTahfizh && (
+            <>
+              <button
+                onClick={() => setActiveTab("tahfizh")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                  activeTab === "tahfizh" || activeTab === "tahfizh_setoran"
+                    ? "bg-amber-400 text-slate-950 font-bold shadow-md"
+                    : "bg-emerald-900/40 text-amber-300 hover:bg-emerald-900/80 border border-emerald-700/40"
+                }`}
+              >
+                <Award className="w-3.5 h-3.5" />
+                <span>Tahfizh: Setoran</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab("tahfizh_murajaah")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                  activeTab === "tahfizh_murajaah"
+                    ? "bg-amber-400 text-slate-950 font-bold shadow-md"
+                    : "bg-emerald-900/40 text-amber-300 hover:bg-emerald-900/80 border border-emerald-700/40"
+                }`}
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>Murajaah</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab("tahfizh_ujian")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                  activeTab === "tahfizh_ujian"
+                    ? "bg-amber-400 text-slate-950 font-bold shadow-md"
+                    : "bg-emerald-900/40 text-amber-300 hover:bg-emerald-900/80 border border-emerald-700/40"
+                }`}
+              >
+                <Award className="w-3.5 h-3.5" />
+                <span>Ujian Tahfizh</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab("tahfizh_laporan")}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                  activeTab === "tahfizh_laporan"
+                    ? "bg-amber-400 text-slate-950 font-bold shadow-md"
+                    : "bg-emerald-900/40 text-amber-300 hover:bg-emerald-900/80 border border-emerald-700/40"
+                }`}
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>Laporan Tahfizh</span>
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -533,6 +642,199 @@ export function GuruView({
               </Card>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* ================= TAB: NILAI SISWA (Section 5.6) ================= */}
+      {activeTab === "nilai" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <FileText className="w-5 h-5 text-emerald-600" />
+              Penilaian Akademik & Rapor Santri (Section 5.6)
+            </h3>
+            <Link
+              href="/dashboard/santri?tab=kelas"
+              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold"
+            >
+              Buka Leger Nilai &rarr;
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {[
+              { subject: "Fiqih Ibadah", class: "Kelas Wustha 2", avg: "88.4", pass: "32/32 Santri", predicate: "Mumtaz" },
+              { subject: "Nahwu & Bahasa Arab", class: "Kelas Ulya 1", avg: "91.2", pass: "28/28 Santri", predicate: "Mumtaz" },
+              { subject: "Tauhid & Aqidah", class: "Kelas Wustha 1", avg: "86.5", pass: "30/30 Santri", predicate: "Jayyid Jiddan" },
+            ].map((n, i) => (
+              <Card key={i} className="p-4 space-y-2 border-slate-200">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-xs text-slate-900">{n.subject}</span>
+                  <Badge variant="success" className="text-[10px]">{n.predicate}</Badge>
+                </div>
+                <p className="text-[11px] text-slate-500">{n.class} • Ketuntasan: {n.pass}</p>
+                <div className="p-2 bg-slate-50 rounded-xl flex items-center justify-between text-xs">
+                  <span className="text-slate-400">Rata-rata Nilai:</span>
+                  <span className="font-bold font-mono text-emerald-700">{n.avg}</span>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: TUGAS SISWA (Section 5.7) ================= */}
+      {activeTab === "tugas" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <CheckSquare className="w-5 h-5 text-indigo-600" />
+              Tugas & Penugasan Santri (Section 5.7)
+            </h3>
+            <button
+              onClick={() => alert("Membuka form penugasan santri baru...")}
+              className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold"
+            >
+              + Buat Tugas Baru
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              { title: "Hafalan Nadzom Jurumiyah Bab I'rab", class: "Kelas Ulya 1", deadline: "Jumat, 25 September 2026", submitted: "26 / 28 Santri", status: "AKTIF" },
+              { title: "Rangkuman Rukun Wudhu Kitab Fathul Qorib", class: "Kelas Wustha 2", deadline: "Senin, 28 September 2026", submitted: "30 / 32 Santri", status: "AKTIF" },
+            ].map((t, i) => (
+              <Card key={i} className="p-4 space-y-2 border-slate-200">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="font-bold text-xs text-slate-900">{t.title}</h4>
+                    <p className="text-[11px] text-slate-500 mt-0.5">{t.class} • Tenggat: <span className="text-rose-600 font-semibold">{t.deadline}</span></p>
+                  </div>
+                  <Badge variant="success" className="text-[10px]">{t.submitted}</Badge>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: PERKEMBANGAN SANTRI (Section 5.8) ================= */}
+      {activeTab === "perkembangan" && (
+        <div className="space-y-4">
+          <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            <Users className="w-5 h-5 text-cyan-600" />
+            Catatan Bimbingan & Perkembangan Santri (Section 5.8)
+          </h3>
+          <p className="text-xs text-slate-500">
+            Guru fokus pada adab, kehadiran KBM, dan capaian akademik santri. Data finansial keluarga dilindungi oleh sistem.
+          </p>
+          <div className="space-y-3">
+            {[
+              { name: "Muhammad Ali Al-Fatih", class: "Ulya 1", notes: "Sangat antusias saat kajian Nahwu, adab kepada ustadz sangat baik, aktif membantu teman halaqah.", adab: "Mumtaz (A)" },
+              { name: "Ahmad Fauzan", class: "Wustha 2", notes: "Pemahaman Fiqih cepat, perlu sedikit dorongan ketelitian dalam menghafal matan syarat shalat.", adab: "Jayyid Jiddan (B+)" },
+            ].map((p, i) => (
+              <Card key={i} className="p-4 space-y-1.5 border-slate-200">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-xs text-slate-900">{p.name} ({p.class})</span>
+                  <Badge variant="success" className="text-[10px]">{p.adab}</Badge>
+                </div>
+                <p className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                  {p.notes}
+                </p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: TAHFIZH MURAJAAH (Section 6.4) ================= */}
+      {activeTab === "tahfizh_murajaah" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-amber-500" />
+              Jurnal Muraja&apos;ah Santri (Section 6.4)
+            </h3>
+            <button
+              onClick={() => alert("Mencatat muraja'ah santri...")}
+              className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-semibold"
+            >
+              + Catat Muraja&apos;ah
+            </button>
+          </div>
+          <div className="space-y-3">
+            {[
+              { santri: "Muhammad Ali Al-Fatih", juz: "Juz 28 & 29", fluency: "Lancar Mutqin", date: "Hari ini, 16.30 WIB" },
+              { santri: "Ahmad Fauzan", juz: "Juz 30 (An-Naba s.d An-Nas)", fluency: "Lancar (1 catatan wakaf)", date: "Kemarin, 16.45 WIB" },
+            ].map((m, i) => (
+              <Card key={i} className="p-3.5 space-y-1 border-slate-200 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900">{m.santri}</span>
+                  <span className="text-[10px] text-slate-400">{m.date}</span>
+                </div>
+                <p className="text-emerald-700 font-semibold">{m.juz} • Status: {m.fluency}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: TAHFIZH UJIAN (Section 6.7) ================= */}
+      {activeTab === "tahfizh_ujian" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <Award className="w-5 h-5 text-purple-600" />
+              Ujian Tahfizh & Tasmi&apos; (Section 6.7)
+            </h3>
+            <button
+              onClick={() => alert("Menjadwalkan ujian tasmi'...")}
+              className="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold"
+            >
+              + Jadwalkan Ujian Tasmi&apos;
+            </button>
+          </div>
+          <div className="space-y-3">
+            {[
+              { santri: "Muhammad Ali Al-Fatih", type: "Tasmi' Sekali Duduk 5 Juz (Juz 26-30)", examiner: "Ustadz Ridwan & Ustadz Syarif", grade: "98.5 (Mumtaz)", status: "LULUS_BERSERTIFIKAT" },
+              { santri: "Bilal Ibnu Rabah", type: "Ujian Juz 30 Bil-Ghaib", examiner: "Ustadzah Fatimah, Lc.", grade: "92.0 (Jayyid Jiddan)", status: "LULUS" },
+            ].map((u, i) => (
+              <Card key={i} className="p-4 space-y-2 border-slate-200 text-xs">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="font-bold text-slate-900">{u.santri}</h4>
+                    <p className="text-purple-800 font-semibold text-[11px] mt-0.5">{u.type}</p>
+                    <p className="text-slate-400 text-[10px]">Penguji: {u.examiner}</p>
+                  </div>
+                  <Badge variant="success" className="text-[10px]">{u.grade}</Badge>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: TAHFIZH LAPORAN (Section 6.8) ================= */}
+      {activeTab === "tahfizh_laporan" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <FileText className="w-5 h-5 text-amber-500" />
+              Laporan Kemajuan Hafalan Halaqah (Section 6.8)
+            </h3>
+            <button
+              onClick={() => window.print()}
+              className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold"
+            >
+              Cetak Rekap Tahfizh
+            </button>
+          </div>
+          <Card className="p-4 space-y-2 border-slate-200 text-xs">
+            <p className="font-semibold text-slate-800">Capaian Mutu Tahfizh:</p>
+            <p className="text-slate-600">
+              100% santri halaqah bimbingan aktif menyetorkan ziyadah minimal 1 halaman per hari dan muraja&apos;ah rutin sebelum waktu shalat maghrib.
+            </p>
+          </Card>
         </div>
       )}
 

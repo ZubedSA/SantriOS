@@ -64,23 +64,68 @@ export function KesantrianView({
   const [isAchievementModalOpen, setIsAchievementModalOpen] = useState(false);
 
   const [selectedTab, setSelectedTab] = useState<
-    "disiplin" | "prestasi" | "pembinaan" | "perizinan" | "kamar"
+    | "disiplin"
+    | "pelanggaran"
+    | "poin"
+    | "prestasi"
+    | "pembinaan"
+    | "tindakan"
+    | "perizinan"
+    | "perizinan_pengajuan"
+    | "perizinan_persetujuan"
+    | "perizinan_belum_kembali"
+    | "perizinan_riwayat"
+    | "asrama"
+    | "asrama_gedung"
+    | "kamar"
+    | "asrama_penghuni"
+    | "asrama_mutasi"
+    | "kegiatan"
+    | "laporan"
   >(
     initialTab === "prestasi"
       ? "prestasi"
       : initialTab === "pembinaan"
       ? "pembinaan"
-      : initialTab === "perizinan"
-      ? "perizinan"
-      : initialTab === "asrama" || initialTab === "kamar"
-      ? "kamar"
+      : initialTab === "tindakan"
+      ? "tindakan"
+      : initialTab?.startsWith("perizinan")
+      ? (initialTab as any)
+      : initialTab?.startsWith("asrama") || initialTab === "kamar"
+      ? (initialTab as any)
+      : initialTab === "kegiatan"
+      ? "kegiatan"
+      : initialTab === "laporan"
+      ? "laporan"
+      : initialTab === "poin"
+      ? "poin"
       : "disiplin"
   );
 
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    if (initialTab && ["disiplin", "prestasi", "pembinaan", "perizinan", "kamar"].includes(initialTab)) {
+    const validTabs = [
+      "disiplin",
+      "pelanggaran",
+      "poin",
+      "prestasi",
+      "pembinaan",
+      "tindakan",
+      "perizinan",
+      "perizinan_pengajuan",
+      "perizinan_persetujuan",
+      "perizinan_belum_kembali",
+      "perizinan_riwayat",
+      "asrama",
+      "asrama_gedung",
+      "kamar",
+      "asrama_penghuni",
+      "asrama_mutasi",
+      "kegiatan",
+      "laporan",
+    ];
+    if (initialTab && validTabs.includes(initialTab)) {
       setSelectedTab(initialTab as any);
     }
   }, [initialTab]);
@@ -295,22 +340,25 @@ export function KesantrianView({
           </p>
         </div>
 
-        {/* Tab Navigasi Kesantrian (Section 8.11 of Spec) */}
+        {/* Menu Navigasi Kesantrian (Section 8.11 of Spec) */}
         <div className="relative z-10 mt-6 pt-4 border-t border-emerald-800/40 flex flex-wrap gap-2">
           {[
-            { id: "disiplin", label: "Pelanggaran & Poin Ta'zir", icon: ShieldAlert, count: violations.filter((v) => v.taazirStatus === "BELUM_TUNTAS").length },
-            { id: "prestasi", label: "Prestasi & Santri Teladan", icon: Award },
-            { id: "pembinaan", label: "Pembinaan & Evaluasi", icon: HeartHandshake },
-            { id: "perizinan", label: "Izin Gerbang & Belum Kembali", icon: FileCheck, count: permits.filter((p) => p.isOverdue).length },
-            { id: "kamar", label: "Asrama & Mutasi Kamar", icon: BedDouble },
+            { id: "disiplin", label: "Pelanggaran & Poin", icon: ShieldAlert, count: violations.filter((v) => v.taazirStatus === "BELUM_TUNTAS").length },
+            { id: "prestasi", label: "Prestasi Santri", icon: Award },
+            { id: "pembinaan", label: "Pembinaan", icon: HeartHandshake },
+            { id: "tindakan", label: "Tindakan & Ta'zir", icon: Scale },
+            { id: "perizinan", label: "Perizinan", icon: FileCheck, count: permits.filter((p) => p.isOverdue).length },
+            { id: "kamar", label: "Asrama & Kamar", icon: BedDouble },
+            { id: "kegiatan", label: "Kegiatan Santri", icon: CalendarCheck },
+            { id: "laporan", label: "Laporan", icon: Printer },
           ].map((tab) => {
             const Icon = tab.icon;
-            const isSel = selectedTab === tab.id;
+            const isSel = selectedTab === tab.id || (tab.id === "disiplin" && (selectedTab === "pelanggaran" || selectedTab === "poin")) || (tab.id === "perizinan" && selectedTab.startsWith("perizinan")) || (tab.id === "kamar" && (selectedTab.startsWith("asrama") || selectedTab === "kamar"));
             return (
               <button
                 key={tab.id}
                 onClick={() => setSelectedTab(tab.id as any)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
                   isSel
                     ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
                     : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
@@ -597,6 +645,125 @@ export function KesantrianView({
                 </div>
               </Card>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: TINDAKAN & TA'ZIR EDUKATIF (Section 8.6) ================= */}
+      {selectedTab === "tindakan" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                <Scale className="w-5 h-5 text-indigo-600" />
+                Daftar Tindakan & Ta&apos;zir Edukatif (Section 8.6)
+              </h3>
+              <p className="text-xs text-slate-500">
+                Alur: Pelanggaran &rarr; Pembinaan &rarr; Tindakan Ta&apos;zir &rarr; Evaluasi & Perkembangan
+              </p>
+            </div>
+            <button
+              onClick={() => setIsViolationModalOpen(true)}
+              className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold"
+            >
+              + Catat Pelanggaran / Ta&apos;zir
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              { type: "Teguran & Nasihat", target: "Santri terlambat apel pagi (1x)", penalty: "-2 Poin • Doa bersama & piket teras masjid", status: "TUNTAS" },
+              { type: "Tugas Pembinaan (Ziyadah)", target: "Tidak mengikuti jamaah maghrib", penalty: "-3 Poin • Setoran 1/2 juz Al-Qur'an ba'da subuh", status: "DALAM_PROSES" },
+              { type: "Panggilan Wali & Ta'zir Berat", target: "Membawa barang terlarang (Smartphone non-resmi)", penalty: "-20 Poin • Pemanggilan orang tua & skorsing 3 hari di pondok", status: "DALAM_PROSES" },
+            ].map((t, i) => (
+              <Card key={i} className="p-4 space-y-2 border-slate-200 text-xs">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="font-bold text-slate-900">{t.type}</h4>
+                    <p className="text-slate-600 text-[11px] mt-0.5">Kasus: {t.target}</p>
+                    <p className="text-emerald-800 font-semibold text-[11px] mt-1 bg-slate-50 p-2 rounded-xl border border-slate-100">
+                      Bentuk Tindakan: {t.penalty}
+                    </p>
+                  </div>
+                  <Badge variant={t.status === "TUNTAS" ? "success" : "warning"} className="text-[10px]">
+                    {t.status}
+                  </Badge>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: KEGIATAN SANTRI (Section 8.9) ================= */}
+      {selectedTab === "kegiatan" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <CalendarCheck className="w-5 h-5 text-cyan-600" />
+              Jadwal Kegiatan & Disiplin Harian Santri (Section 8.9)
+            </h3>
+            <Link
+              href="/dashboard/absensi"
+              className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-semibold"
+            >
+              Presensi Kegiatan &rarr;
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {[
+              { time: "04.00 - 05.15 WIB", activity: "Bangun Pagi, Qiyamul Lail & Shalat Subuh Berjamaah", pic: "Pembina Asrama & Keamanan", loc: "Masjid Jami" },
+              { time: "05.30 - 06.30 WIB", activity: "Halaqah Ziyadah Tahfizh Pagi", pic: "Dewan Asatidz Tahfizh", loc: "Halaqah Asrama" },
+              { time: "16.00 - 17.15 WIB", activity: "Halaqah Muraja'ah & Dzikir Sore Al-Ma'tsurat", pic: "Ustadz Pembina", loc: "Masjid Lt. 1 & 2" },
+              { time: "20.00 - 21.30 WIB", activity: "Belajar Mandiri Malam (Muajjah / Mudzakarah Kitab)", pic: "Pengurus Asrama", loc: "Gedung Belajar" },
+            ].map((act, i) => (
+              <Card key={i} className="p-4 space-y-1.5 border-slate-200 text-xs">
+                <span className="font-bold text-emerald-700 font-mono text-[11px] block">{act.time}</span>
+                <p className="font-bold text-slate-900">{act.activity}</p>
+                <div className="flex justify-between text-[11px] text-slate-400 pt-1">
+                  <span>Lokasi: {act.loc}</span>
+                  <span>PIC: {act.pic}</span>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: LAPORAN KESANTRIAN (Section 8.10) ================= */}
+      {selectedTab === "laporan" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <Printer className="w-5 h-5 text-purple-600" />
+              Laporan & Rekapitulasi Kesantrian (Section 8.10)
+            </h3>
+            <button
+              onClick={() => window.print()}
+              className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Cetak Rekap Kesantrian</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+            <Card className="p-4 space-y-1.5 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Total Ta&apos;zir Tuntas</span>
+              <p className="text-2xl font-black text-emerald-700">91.4%</p>
+              <p className="text-[11px] text-slate-500">Santri menyelesaikan tugas pembinaan tepat waktu.</p>
+            </Card>
+            <Card className="p-4 space-y-1.5 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Tingkat Kebersihan Asrama</span>
+              <p className="text-2xl font-black text-teal-700">Nilai A</p>
+              <p className="text-[11px] text-slate-500">Rata-rata penilaian sanitasi 46 kamar.</p>
+            </Card>
+            <Card className="p-4 space-y-1.5 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Kepatuhan Izin Keluar</span>
+              <p className="text-2xl font-black text-slate-900">98.2%</p>
+              <p className="text-[11px] text-slate-500">Santri kembali tepat waktu sebelum batas jam malam.</p>
+            </Card>
           </div>
         </div>
       )}

@@ -31,6 +31,7 @@ import {
   TrendingUp,
   TrendingDown,
   Info,
+  Award,
 } from "lucide-react";
 import Link from "next/link";
 import { formatRupiah } from "@santrios/utils";
@@ -62,7 +63,7 @@ export function OwnerView({
   initialTab,
 }: OwnerViewProps) {
   const [activeTab, setActiveTab] = useState<
-    "ringkasan" | "kondisi" | "persetujuan" | "disposisi" | "laporan"
+    "ringkasan" | "kondisi" | "persetujuan" | "disposisi" | "laporan" | "notifikasi" | "akademik" | "tahfizh" | "kesantrian"
   >(
     initialTab === "kondisi"
       ? "kondisi"
@@ -72,13 +73,21 @@ export function OwnerView({
       ? "disposisi"
       : initialTab === "laporan"
       ? "laporan"
+      : initialTab === "notifikasi"
+      ? "notifikasi"
+      : initialTab === "akademik"
+      ? "akademik"
+      : initialTab === "tahfizh"
+      ? "tahfizh"
+      : initialTab === "kesantrian"
+      ? "kesantrian"
       : "ringkasan"
   );
 
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    if (initialTab && ["ringkasan", "kondisi", "persetujuan", "disposisi", "laporan"].includes(initialTab)) {
+    if (initialTab && ["ringkasan", "kondisi", "persetujuan", "disposisi", "laporan", "notifikasi", "akademik", "tahfizh", "kesantrian"].includes(initialTab)) {
       setActiveTab(initialTab as any);
     }
   }, [initialTab]);
@@ -350,14 +359,18 @@ export function OwnerView({
           </p>
         </div>
 
-        {/* 5 Tab Menu Kiai (Section 3.7 & Spec) */}
+        {/* Menu Kiai (Section 3.7 & Spec) */}
         <div className="relative z-10 mt-6 pt-4 border-t border-emerald-800/40 flex flex-wrap gap-2">
           {[
             { id: "ringkasan", label: "Dashboard", icon: Sparkles },
             { id: "kondisi", label: "Kondisi Pesantren (Radar)", icon: Activity },
-            { id: "persetujuan", label: "Persetujuan / Approval", icon: FileCheck, count: approvals.filter((a) => a.status === "PENDING").length },
-            { id: "disposisi", label: "Disposisi Tugas Kiai", icon: FileText, count: dispositions.filter((d) => d.status === "DALAM_PROSES").length },
+            { id: "persetujuan", label: "Persetujuan", icon: FileCheck, count: approvals.filter((a) => a.status === "PENDING").length },
+            { id: "disposisi", label: "Disposisi Kiai", icon: FileText, count: dispositions.filter((d) => d.status === "DALAM_PROSES").length },
+            { id: "akademik", label: "Akademik", icon: BookOpen },
+            { id: "tahfizh", label: "Tahfizh", icon: Award },
+            { id: "kesantrian", label: "Kesantrian", icon: Building },
             { id: "laporan", label: "Laporan Eksekutif", icon: FileSpreadsheet },
+            { id: "notifikasi", label: "Notifikasi Strategis", icon: AlertCircle },
           ].map((tab) => {
             const Icon = tab.icon;
             const isSel = activeTab === tab.id;
@@ -365,7 +378,7 @@ export function OwnerView({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
                   isSel
                     ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
                     : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
@@ -1007,6 +1020,194 @@ export function OwnerView({
               </div>
             )}
           </Card>
+        </div>
+      )}
+
+      {/* ================= TAB: AKADEMIK EKSEKUTIF ================= */}
+      {activeTab === "akademik" && (
+        <div className="space-y-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-emerald-600" />
+                Ringkasan Akademik & Mutu Pendidikan (Kiai Mode)
+              </h3>
+              <p className="text-xs text-slate-500">
+                Pemantauan capaian kurikulum kepesantrenan, kelulusan KKM, dan distribusi rombongan belajar.
+              </p>
+            </div>
+            <Link
+              href="/dashboard/santri?tab=kelas"
+              className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs"
+            >
+              Lihat Leger Nilai &rarr;
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="p-4 space-y-2 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Tingkat Kelulusan KKM</span>
+              <p className="text-2xl font-black text-emerald-700">96.4%</p>
+              <p className="text-[11px] text-slate-500">412 dari 428 santri melampaui KKM (Standar nilai 75).</p>
+            </Card>
+            <Card className="p-4 space-y-2 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Total Rombel & Asatidz</span>
+              <p className="text-2xl font-black text-slate-900">12 Kelas • 28 Guru</p>
+              <p className="text-[11px] text-slate-500">Rasio santri-guru ideal (15:1) mendukung pengawasan intensif.</p>
+            </Card>
+            <Card className="p-4 space-y-2 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Kedisiplinan Kehadiran KBM</span>
+              <p className="text-2xl font-black text-teal-700">95.1%</p>
+              <p className="text-[11px] text-slate-500">Tingkat absensi rendah, mayoritas izin karena kesehatan ringan.</p>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: TAHFIZH EKSEKUTIF ================= */}
+      {activeTab === "tahfizh" && (
+        <div className="space-y-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                <Award className="w-5 h-5 text-amber-500" />
+                Capaian Mutu Tahfizh Al-Qur&apos;an
+              </h3>
+              <p className="text-xs text-slate-500">
+                Pencapaian ziyadah dan muraja&apos;ah seluruh halaqah bimbingan tahfizh santri mukim.
+              </p>
+            </div>
+            <Link
+              href="/dashboard/activities?tab=tahfizh"
+              className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold shadow-xs"
+            >
+              Jurnal Setoran Lengkap &rarr;
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card className="p-4 space-y-1.5 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Khatam 30 Juz Tahun Ini</span>
+              <p className="text-2xl font-black text-emerald-700">12 Santri</p>
+              <p className="text-[11px] text-slate-500">Telah lulus tasmi&apos; bil-ghaib di hadapan dewan penguji.</p>
+            </Card>
+            <Card className="p-4 space-y-1.5 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Target Hafalan Tuntas</span>
+              <p className="text-2xl font-black text-teal-700">82.3%</p>
+              <p className="text-[11px] text-slate-500">Santri mencapai target semester sesuai jenjang pendidikan.</p>
+            </Card>
+            <Card className="p-4 space-y-1.5 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Santri Butuh Bimbingan</span>
+              <p className="text-2xl font-black text-amber-600">14 Santri</p>
+              <p className="text-[11px] text-slate-500">Diberikan jadwal ekstra talaqqi & muraja&apos;ah sore.</p>
+            </Card>
+            <Card className="p-4 space-y-1.5 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Jumlah Halaqah</span>
+              <p className="text-2xl font-black text-slate-900">8 Halaqah</p>
+              <p className="text-[11px] text-slate-500">Dipimpin oleh para asatidz bersanad qira&apos;ah mutqin.</p>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: KESANTRIAN EKSEKUTIF ================= */}
+      {activeTab === "kesantrian" && (
+        <div className="space-y-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                <Building className="w-5 h-5 text-indigo-600" />
+                Ikhtisar Kesantrian, Asrama & Ketertiban
+              </h3>
+              <p className="text-xs text-slate-500">
+                Evaluasi pembinaan akhlak, ta&apos;zir edukatif, kamar asrama, dan perizinan santri.
+              </p>
+            </div>
+            <Link
+              href="/dashboard?tab=pelanggaran"
+              className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs"
+            >
+              Manajemen Kesantrian &rarr;
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="p-4 space-y-2 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Pelanggaran Minggu Ini</span>
+              <p className="text-2xl font-black text-amber-600">6 Kasus</p>
+              <p className="text-[11px] text-slate-500">5 kasus keterlambatan apel, 1 kasus gadget non-resmi (dalam pembinaan).</p>
+            </Card>
+            <Card className="p-4 space-y-2 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Santri Berprestasi & Teladan</span>
+              <p className="text-2xl font-black text-emerald-700">34 Santri</p>
+              <p className="text-[11px] text-slate-500">Diberikan poin apresiasi untuk ketertiban & khidmah asrama.</p>
+            </Card>
+            <Card className="p-4 space-y-2 border-slate-200">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Status Izin & Gerbang</span>
+              <p className="text-2xl font-black text-slate-900">4 Santri Izin</p>
+              <p className="text-[11px] text-slate-500">Semua izin kepulangan keluarga terdata resmi dan terpantau tertib.</p>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {/* ================= TAB: NOTIFIKASI STRATEGIS (Section 3.6) ================= */}
+      {activeTab === "notifikasi" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 text-amber-500" />
+              Notifikasi Strategis Pesantren (Section 3.6)
+            </h3>
+            <span className="text-xs text-slate-400">Ambang Batas & Peringatan Dini</span>
+          </div>
+
+          <div className="space-y-3">
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-rose-950">Persetujuan Pengeluaran Logistik Mendesak</h4>
+                  <span className="text-[10px] font-semibold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-md">Mendesak</span>
+                </div>
+                <p className="text-xs text-rose-800 mt-1">
+                  Pengajuan belanja logistik beras dapur 500 Kg (Rp 6.750.000) memerlukan persetujuan Kiai untuk pencairan kas bendahara hari ini.
+                </p>
+                <button
+                  onClick={() => setActiveTab("persetujuan")}
+                  className="mt-2 text-xs font-bold text-rose-700 underline hover:text-rose-900"
+                >
+                  Buka Menu Persetujuan &rarr;
+                </button>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-amber-950">Peningkatan Tunggakan SPP &gt; 2 Bulan</h4>
+                  <span className="text-[10px] font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md">Perhatian</span>
+                </div>
+                <p className="text-xs text-amber-800 mt-1">
+                  18 santri tercatat belum melunasi kewajiban syahriyah selama lebih dari 2 bulan. Bendahara telah menyiapkan rekap penagihan persuasif melalui WhatsApp.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-teal-50 border border-teal-200 flex items-start gap-3">
+              <CheckCircle2 className="w-5 h-5 text-teal-600 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-teal-950">Kedisiplinan Shalat Jamaah & Kehadiran Sangat Baik</h4>
+                  <span className="text-[10px] font-semibold text-teal-700 bg-teal-100 px-2 py-0.5 rounded-md">Stabil</span>
+                </div>
+                <p className="text-xs text-teal-800 mt-1">
+                  Rata-rata presensi harian mencapai 94.2%. Tim kesantrian melaporkan nihil santri mangkir shalat subuh dalam 3 hari terakhir.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
