@@ -1,14 +1,20 @@
-// User Roles defined in SantriOS Master Prompt
+// User Roles defined in SantriOS Specification
 export type SystemRoleType =
   | "SUPER_ADMIN"
   | "OWNER"
+  | "KIAI"
   | "ADMIN"
   | "BENDAHARA"
   | "GURU"
+  | "KESANTRIAN"
   | "MUSYRIF"
   | "WALI_SANTRI"
   | "SANTRI"
   | "STAFF";
+
+// Teacher Assignments (Section 2 & 6 of Role Document)
+// Role: Guru, Assignment: Guru Mapel, Wali Kelas, Guru Tahfizh
+export type TeacherAssignment = "GURU_MAPEL" | "WALI_KELAS" | "GURU_TAHFIZH";
 
 // Modular System Registry Keys
 export type ModuleKey =
@@ -140,6 +146,7 @@ export interface AuthSession {
     name: SystemRoleType | string;
     isSuperAdmin: boolean;
   };
+  assignments?: TeacherAssignment[];
   permissions: string[];
   activeModules: ModuleKey[];
 }
@@ -149,4 +156,118 @@ export interface TenantContext {
   tenantId: string;
   tenantSlug: string;
   userId?: string;
+}
+
+// -------------------------------------------------------------
+// Extended Domain Types for 5 Roles (Section 3 - 8 of Specification)
+// -------------------------------------------------------------
+
+// Executive / Kiai Domain
+export interface ExecutiveOverviewKPI {
+  financialHealth: "STABIL" | "PERHATIAN" | "TINDAKAN";
+  attendanceHealth: "STABIL" | "PERHATIAN" | "TINDAKAN";
+  tahfizhHealth: "STABIL" | "PERHATIAN" | "TINDAKAN";
+  academicHealth: "STABIL" | "PERHATIAN" | "TINDAKAN";
+  disciplineHealth: "STABIL" | "PERHATIAN" | "TINDAKAN";
+  dormitoryHealth: "STABIL" | "PERHATIAN" | "TINDAKAN";
+  arrearsHealth: "STABIL" | "PERHATIAN" | "TINDAKAN";
+  ppdbHealth: "STABIL" | "PERHATIAN" | "TINDAKAN";
+}
+
+export interface ExecutiveApproval {
+  id: string;
+  type: "EXPENSE" | "ACTIVITY" | "SPECIAL_PERMIT" | "POLICY";
+  title: string;
+  applicant: string;
+  role: string;
+  nominal?: number;
+  date: string;
+  urgency: "NORMAL" | "TINGGI" | "MENDESAK";
+  status: "MENUNGGU" | "DISETUJUI" | "DITOLAK" | "REVISI";
+  notes?: string;
+}
+
+export interface ExecutiveDisposition {
+  id: string;
+  title: string;
+  picName: string;
+  picRole: string;
+  deadline: string;
+  priority: "RENDAH" | "SEDANG" | "TINGGI";
+  status: "MENUNGGU" | "PROSES" | "SELESAI";
+  instructions: string;
+  progressNotes?: string;
+}
+
+// Kesantrian & Kedisiplinan Domain
+export interface DisciplineViolation {
+  id: string;
+  studentId: string;
+  studentName: string;
+  category: "RINGAN" | "SEDANG" | "BERAT";
+  violation: string;
+  points: number; // e.g. -2, -3, -5, -20
+  location: string;
+  date: string;
+  reporter: string;
+  actionTaken?: string;
+  status: "TERCATAT" | "DALAM_PEMBINAAN" | "SELESAI";
+}
+
+export interface StudentAchievement {
+  id: string;
+  studentId: string;
+  studentName: string;
+  title: string;
+  category: "AKADEMIK" | "TAHFIZH" | "AKHLAK" | "KEBERSIHAN" | "LOMBA";
+  points: number; // e.g. +5, +10
+  date: string;
+  notes?: string;
+}
+
+export interface StudentCounseling {
+  id: string;
+  studentId: string;
+  studentName: string;
+  issue: string;
+  mentor: string;
+  actionPlan: string;
+  targetDate: string;
+  evaluationNotes?: string;
+  status: "PROSES" | "MEMBAIK" | "SELESAI";
+}
+
+// Tahfizh Assignment Domain
+export interface TahfizhHalaqah {
+  id: string;
+  name: string;
+  mentorName: string;
+  targetJuz: number;
+  totalStudents: number;
+  schedule: string;
+}
+
+export interface TahfizhSetoranInput {
+  studentId: string;
+  surah: string;
+  ayahStart: number;
+  ayahEnd: number;
+  juz: number;
+  type: "SABAQ" | "SABQI" | "MANZIL" | "TASMI";
+  tajwidGrade: "MUMTAZ" | "JAYYID_JIDDAN" | "JAYYID" | "MAQBUL";
+  fluencyGrade: "MUMTAZ" | "JAYYID_JIDDAN" | "JAYYID" | "MAQBUL";
+  makhrajGrade: "MUMTAZ" | "JAYYID_JIDDAN" | "JAYYID" | "MAQBUL";
+  overallGrade: "MUMTAZ" | "JAYYID_JIDDAN" | "JAYYID" | "MAQBUL";
+  notes?: string;
+}
+
+// Finance Domain
+export interface BulkInvoiceGeneration {
+  classroomId?: string; // null for all active students
+  title: string;
+  category: "SPP" | "UANG_MAKAN" | "KEGIATAN" | "DAFTAR_ULANG";
+  amount: number;
+  dueDate: string;
+  month: string;
+  year: string;
 }

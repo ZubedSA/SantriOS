@@ -6,7 +6,22 @@ import { ForbiddenError } from "@santrios/utils";
  */
 export function hasRole(session: AuthSession, role: SystemRoleType | string): boolean {
   if (session.role.isSuperAdmin) return true;
-  return session.role.name === role;
+  const currentRole = session.role.name;
+  if (role === "KIAI" || role === "OWNER") {
+    return currentRole === "KIAI" || currentRole === "OWNER";
+  }
+  if (role === "KESANTRIAN" || role === "MUSYRIF") {
+    return currentRole === "KESANTRIAN" || currentRole === "MUSYRIF";
+  }
+  return currentRole === role;
+}
+
+/**
+ * Checks if current user has a specific assignment (e.g. GURU_TAHFIZH, WALI_KELAS)
+ */
+export function hasAssignment(session: AuthSession, assignment: string): boolean {
+  if (session.role.isSuperAdmin || session.role.name === "OWNER" || session.role.name === "KIAI") return true;
+  return session.assignments?.includes(assignment as any) ?? false;
 }
 
 /**
@@ -14,7 +29,7 @@ export function hasRole(session: AuthSession, role: SystemRoleType | string): bo
  */
 export function hasPermission(session: AuthSession, permissionKey: string): boolean {
   if (session.role.isSuperAdmin) return true;
-  if (session.role.name === "OWNER") return true; // Owner has all permissions within their tenant
+  if (session.role.name === "OWNER" || session.role.name === "KIAI") return true; // Owner/Kiai has all permissions within their tenant
   return session.permissions.includes(permissionKey);
 }
 

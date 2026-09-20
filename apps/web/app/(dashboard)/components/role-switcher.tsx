@@ -21,44 +21,44 @@ interface RoleSwitcherProps {
 
 const ROLES = [
   {
-    key: "OWNER",
-    label: "Pimpinan / Kyai",
-    desc: "Ringkasan Eksekutif, Radar & Otorisasi",
+    key: "KIAI",
+    label: "Kiai / Pengasuh",
+    desc: "Executive Mode: Radar Pesantren, Approval & Disposisi",
     icon: Crown,
     color: "text-amber-500 bg-amber-50 border-amber-200",
   },
   {
     key: "ADMIN",
-    label: "Administrator TU",
-    desc: "Data Induk, PPDB, Rombel & KTS",
+    label: "Admin / TU / Sekretaris",
+    desc: "Administration Mode: Data Induk, Surat, PPDB & Tugas TU",
     icon: ShieldAlert,
     color: "text-emerald-600 bg-emerald-50 border-emerald-200",
   },
   {
-    key: "BENDAHARA",
-    label: "Bendahara",
-    desc: "Kasir SPP, Arus Kas & Tagihan WA",
-    icon: CreditCard,
-    color: "text-sky-600 bg-sky-50 border-sky-200",
-  },
-  {
     key: "GURU",
-    label: "Guru Pengajar",
-    desc: "KBM, Rapor Nilai, Remedial & Tahfizh",
+    label: "Guru / Ustadz",
+    desc: "Teaching Mode: KBM, Absen Cepat, Nilai & Guru Tahfizh",
     icon: BookOpen,
     color: "text-teal-600 bg-teal-50 border-teal-200",
   },
   {
-    key: "MUSYRIF",
-    label: "Musyrif Asrama",
-    desc: "Shalat 5 Waktu, Izin Gerbang & Ta'zir",
+    key: "BENDAHARA",
+    label: "Bendahara",
+    desc: "Finance Mode: Kasir SPP, Tagihan Massal, Kas & Approval",
+    icon: CreditCard,
+    color: "text-sky-600 bg-sky-50 border-sky-200",
+  },
+  {
+    key: "KESANTRIAN",
+    label: "Kesantrian & Kedisiplinan",
+    desc: "Student Development: Pelanggaran, Ta'zir, Asrama & Izin",
     icon: Building,
     color: "text-indigo-600 bg-indigo-50 border-indigo-200",
   },
   {
     key: "WALI_SANTRI",
     label: "Wali Santri",
-    desc: "Portal Anak, Ibadah, Rapor & Bayar SPP",
+    desc: "Portal Wali: Capaian Anak, Ibadah, Rapor & Tagihan SPP",
     icon: GraduationCap,
     color: "text-rose-600 bg-rose-50 border-rose-200",
   },
@@ -109,9 +109,13 @@ export function RoleSwitcher({ currentRole, userName }: RoleSwitcherProps) {
     }
   };
 
-  const activeRoleObj = ROLES.find(
-    (r) => r.key === currentRole || (currentRole === "KESANTRIAN" && r.key === "MUSYRIF")
-  ) || ROLES[0];
+  const isRoleActive = (key: string) => {
+    if (key === "KIAI") return currentRole === "KIAI" || currentRole === "OWNER";
+    if (key === "KESANTRIAN") return currentRole === "KESANTRIAN" || currentRole === "MUSYRIF";
+    return currentRole === key;
+  };
+
+  const activeRoleObj = ROLES.find((r) => isRoleActive(r.key)) || ROLES[0];
 
   const IconComp = activeRoleObj.icon;
 
@@ -155,8 +159,7 @@ export function RoleSwitcher({ currentRole, userName }: RoleSwitcherProps) {
           <div className="space-y-1">
             {ROLES.map((r) => {
               const ItemIcon = r.icon;
-              const isSelected =
-                r.key === currentRole || (currentRole === "KESANTRIAN" && r.key === "MUSYRIF");
+              const isSelected = isRoleActive(r.key);
 
               return (
                 <button

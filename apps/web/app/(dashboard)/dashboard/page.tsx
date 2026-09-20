@@ -12,7 +12,11 @@ import { SuperAdminView } from "./components/superadmin-view";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams?: { tab?: string };
+}) {
   const session = await getCurrentSession();
 
   if (!session) {
@@ -33,7 +37,9 @@ export default async function DashboardPage() {
     console.warn("⚠️ [DashboardPage] Database sedang reconnecting atau offline, menampilkan data tampilan:", err.message);
   }
 
-  // 2. Role-Tailored Experience per Tenant (Section 40 of Master Prompt)
+  const requestedTab = searchParams?.tab;
+
+  // 2. Role-Tailored Experience per Tenant (Section 3-8 of SantriOS_Role_Fitur_Halaman.md)
   switch (session.role.name) {
     case "BENDAHARA":
       return (
@@ -41,6 +47,7 @@ export default async function DashboardPage() {
           tenantName={session.tenant.name}
           userName={session.user.name}
           metrics={metrics}
+          initialTab={requestedTab}
         />
       );
 
@@ -50,6 +57,8 @@ export default async function DashboardPage() {
           tenantName={session.tenant.name}
           userName={session.user.name}
           metrics={metrics}
+          assignments={session.assignments || ["GURU_MAPEL", "WALI_KELAS", "GURU_TAHFIZH"]}
+          initialTab={requestedTab}
         />
       );
 
@@ -60,6 +69,7 @@ export default async function DashboardPage() {
           tenantName={session.tenant.name}
           userName={session.user.name}
           metrics={metrics}
+          initialTab={requestedTab}
         />
       );
 
@@ -78,9 +88,11 @@ export default async function DashboardPage() {
           userName={session.user.name}
           activeModules={session.activeModules}
           metrics={metrics}
+          initialTab={requestedTab}
         />
       );
 
+    case "KIAI":
     case "OWNER":
     default:
       return (
@@ -89,6 +101,7 @@ export default async function DashboardPage() {
           userName={session.user.name}
           activeModules={session.activeModules}
           metrics={metrics}
+          initialTab={requestedTab}
         />
       );
   }

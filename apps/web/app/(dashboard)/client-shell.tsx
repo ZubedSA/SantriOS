@@ -47,7 +47,7 @@ export default function DashboardClientShell({ role = "OWNER" }: DashboardClient
         return [
           { label: "Jadwal", href: "/dashboard", icon: <Calendar className="w-5 h-5" /> },
           { label: "Absen KBM", href: "/dashboard/absensi", icon: <CheckSquare className="w-5 h-5" /> },
-          { label: "Nilai & Rapor", href: "/dashboard/santri", icon: <BookOpen className="w-5 h-5" /> },
+          { label: "Nilai & Rapor", href: "/dashboard/santri?tab=kelas", icon: <BookOpen className="w-5 h-5" /> },
           { label: "Tahfizh", href: "/dashboard/activities?tab=tahfizh", icon: <Award className="w-5 h-5" /> },
         ];
       case "KESANTRIAN":
@@ -79,14 +79,15 @@ export default function DashboardClientShell({ role = "OWNER" }: DashboardClient
           { label: "Dokumen", href: "/dashboard/santri?tab=dokumen", icon: <FileText className="w-5 h-5" /> },
           { label: "Absensi", href: "/dashboard/absensi", icon: <CheckSquare className="w-5 h-5" /> },
         ];
+      case "KIAI":
       case "OWNER":
       default:
         return [
-          { label: "Eksekutif", href: "/dashboard", icon: <LayoutDashboard className="w-5 h-5" /> },
+          { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard className="w-5 h-5" /> },
+          { label: "Radar", href: "/dashboard?tab=kondisi", icon: <CheckCircle2 className="w-5 h-5" /> },
+          { label: "Persetujuan", href: "/dashboard?tab=persetujuan", icon: <FileCheck className="w-5 h-5" /> },
           { label: "Keuangan", href: "/dashboard/finance", icon: <CreditCard className="w-5 h-5" /> },
-          { label: "Absensi", href: "/dashboard/absensi", icon: <CheckCircle2 className="w-5 h-5" /> },
           { label: "Santri", href: "/dashboard/santri", icon: <Users className="w-5 h-5" /> },
-          { label: "Mutu", href: "/dashboard/activities", icon: <BookOpen className="w-5 h-5" /> },
         ];
     }
   };

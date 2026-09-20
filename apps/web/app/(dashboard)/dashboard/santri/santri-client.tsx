@@ -2176,21 +2176,26 @@ export default function SantriClient({
               </button>
             </div>
 
-            {/* Profile Tab Switcher */}
+            {/* Profile Tab Switcher - 10 Pillars of Student 360 (Section 10) */}
             <div className="flex border-b border-slate-200 bg-slate-50 px-4 overflow-x-auto">
               {[
-                { id: "ringkasan", label: "Ringkasan Profil", icon: <Users className="w-3.5 h-3.5" /> },
-                { id: "tahfizh", label: "Capaian Tahfizh", icon: <BookOpen className="w-3.5 h-3.5" /> },
-                ...(!isGuru ? [{ id: "keuangan", label: "Status Keuangan SPP", icon: <CreditCard className="w-3.5 h-3.5" /> }] : []),
-                { id: "absensi", label: "Kedisiplinan & Kehadiran", icon: <CalendarCheck className="w-3.5 h-3.5" /> },
-                ...(!isGuru ? [{ id: "perizinan", label: "Riwayat Perizinan", icon: <FileCheck className="w-3.5 h-3.5" /> }] : []),
+                { id: "ringkasan", label: "Biodata", icon: <Users className="w-3.5 h-3.5" /> },
+                { id: "wali", label: "Wali Santri", icon: <Phone className="w-3.5 h-3.5" /> },
+                { id: "akademik", label: "Akademik & Rapor", icon: <GraduationCap className="w-3.5 h-3.5" /> },
+                { id: "tahfizh", label: "Tahfizh Al-Qur'an", icon: <BookOpen className="w-3.5 h-3.5" /> },
+                { id: "absensi", label: "Presensi & Kehadiran", icon: <CalendarCheck className="w-3.5 h-3.5" /> },
+                { id: "kedisiplinan", label: "Kedisiplinan & Poin", icon: <ShieldCheck className="w-3.5 h-3.5" /> },
+                { id: "pembinaan", label: "Pembinaan & Konseling", icon: <HeartHandshake className="w-3.5 h-3.5" /> },
+                { id: "perizinan", label: "Perizinan", icon: <FileCheck className="w-3.5 h-3.5" /> },
+                ...(!isGuru && !isKesantrian ? [{ id: "keuangan", label: "Keuangan SPP", icon: <CreditCard className="w-3.5 h-3.5" /> }] : []),
+                { id: "dokumen", label: "Dokumen & KTS", icon: <QrCode className="w-3.5 h-3.5" /> },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() =>
-                    setActiveDossierTab(tab.id as "ringkasan" | "tahfizh" | "keuangan" | "absensi" | "perizinan")
+                    setActiveDossierTab(tab.id as any)
                   }
-                  className={`flex items-center gap-1.5 px-4 py-3 text-xs font-semibold border-b-2 transition-all shrink-0 ${
+                  className={`flex items-center gap-1.5 px-3 py-2.5 text-xs font-semibold border-b-2 transition-all shrink-0 ${
                     activeDossierTab === tab.id
                       ? "border-emerald-600 text-emerald-700 bg-white"
                       : "border-transparent text-slate-500 hover:text-slate-800"
@@ -2227,28 +2232,67 @@ export default function SantriClient({
                     </div>
                   </div>
 
-                  <div className="p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-100 space-y-2">
-                    <h4 className="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-emerald-700" />
-                      Informasi Orang Tua / Wali
-                    </h4>
-                    <div className="grid grid-cols-2 gap-2 text-slate-700">
-                      <div>
-                        <span className="text-[10px] text-slate-500 block">
-                          Nama Wali ({selectedStudent.guardianRelation})
-                        </span>
-                        <span className="font-bold text-slate-900">{selectedStudent.guardianName}</span>
+                  <div className="grid grid-cols-2 gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div>
+                      <span className="text-[10px] text-slate-400 block">Rombongan Belajar (Kelas)</span>
+                      <span className="font-bold text-emerald-800">{selectedStudent.className}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block">Kamar Asrama Mukim</span>
+                      <span className="font-bold text-slate-900">{selectedStudent.roomName}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeDossierTab === "wali" && (
+                <div className="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-100 space-y-3">
+                  <h4 className="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-emerald-700" />
+                    Data Orang Tua / Wali Santri Terdaftar
+                  </h4>
+                  <div className="grid grid-cols-2 gap-3 text-slate-700">
+                    <div>
+                      <span className="text-[10px] text-slate-500 block">
+                        Nama Wali ({selectedStudent.guardianRelation})
+                      </span>
+                      <span className="font-bold text-slate-900">{selectedStudent.guardianName}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-500 block">No. WhatsApp Resmi</span>
+                      <a
+                        href={`https://wa.me/${selectedStudent.guardianPhone.replace(/\D/g, "")}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-bold text-emerald-700 hover:underline flex items-center gap-1"
+                      >
+                        <span>{selectedStudent.guardianPhone}</span>
+                        <Send className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeDossierTab === "akademik" && (
+                <div className="space-y-3">
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-slate-900">Rapor KBM Semester Ganjil 2026/2027</span>
+                      <Badge variant="success">Tuntas KKM</Badge>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-center pt-1">
+                      <div className="p-2 rounded-xl bg-white border border-slate-100">
+                        <span className="text-[10px] text-slate-400 block">Rata-rata UH</span>
+                        <span className="font-bold font-mono text-emerald-700">90.5</span>
                       </div>
-                      <div>
-                        <span className="text-[10px] text-slate-500 block">No. WhatsApp Wali</span>
-                        <a
-                          href={`https://wa.me/${selectedStudent.guardianPhone}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="font-bold text-emerald-700 hover:underline"
-                        >
-                          {selectedStudent.guardianPhone}
-                        </a>
+                      <div className="p-2 rounded-xl bg-white border border-slate-100">
+                        <span className="text-[10px] text-slate-400 block">Rata-rata UTS</span>
+                        <span className="font-bold font-mono text-emerald-700">92.0</span>
+                      </div>
+                      <div className="p-2 rounded-xl bg-white border border-slate-100">
+                        <span className="text-[10px] text-slate-400 block">Nilai Akhir</span>
+                        <span className="font-bold font-mono text-emerald-800 text-sm">91.2 (Mumtaz)</span>
                       </div>
                     </div>
                   </div>
@@ -2259,23 +2303,70 @@ export default function SantriClient({
                 <div className="space-y-3">
                   <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
                     <div>
-                      <p className="text-[10px] text-slate-400 uppercase font-semibold">Progres Terakhir</p>
+                      <p className="text-[10px] text-slate-400 uppercase font-semibold">Capaian Ziyadah & Muraja'ah</p>
                       <p className="text-sm font-bold text-emerald-800">{selectedStudent.hifzProgress}</p>
                       <p className="text-slate-500 text-[11px] mt-0.5">{selectedStudent.hifzDetail}</p>
                     </div>
                     <Badge variant="success">Mumtaz (A)</Badge>
                   </div>
-                  <p className="text-[11px] text-slate-400 italic text-center pt-2">
-                    Riwayat setoran terverifikasi resmi oleh Musyrif Halaqah.
+                  <p className="text-[11px] text-slate-400 italic text-center">
+                    Binaan: Halaqah Utsman Bin Affan (Ustadzah Fatimah, Lc.)
                   </p>
                 </div>
               )}
 
-              {activeDossierTab === "keuangan" && !isGuru && (
+              {activeDossierTab === "absensi" && (
                 <div className="space-y-3">
                   <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
                     <div>
-                      <p className="text-[10px] text-slate-400 uppercase font-semibold">Status SPP September</p>
+                      <p className="text-[10px] text-slate-400 uppercase font-semibold">Tingkat Kehadiran KBM & Shalat</p>
+                      <p className="text-base font-bold text-emerald-700">{selectedStudent.attendanceRate}</p>
+                      <p className="text-[11px] text-slate-500">Tertib dan disiplin dalam seluruh kegiatan harian.</p>
+                    </div>
+                    <Badge variant="success">Sangat Disiplin</Badge>
+                  </div>
+                </div>
+              )}
+
+              {activeDossierTab === "kedisiplinan" && (
+                <div className="space-y-3">
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-bold text-slate-900">Catatan Pelanggaran & Poin Ta'zir</p>
+                      <Badge variant="success">Poin Pelanggaran: 0 (Bersih)</Badge>
+                    </div>
+                    <p className="text-xs text-slate-600">
+                      Santri tidak memiliki pelanggaran aktif. Menunjukkan perilaku tawadhu dan menjaga adab santri.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {activeDossierTab === "pembinaan" && (
+                <div className="space-y-3">
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+                    <p className="text-xs font-bold text-slate-900">Catatan Pembinaan Kesantrian</p>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Santri aktif dalam halaqah tarbiyah malam dan menjaga kebersihan kamar asrama dengan predikat memuaskan.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {activeDossierTab === "perizinan" && (
+                <div className="space-y-3">
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                    <p className="text-[10px] text-slate-400 uppercase font-semibold">Riwayat Izin Terkini</p>
+                    <p className="text-xs font-semibold text-slate-800 mt-1">{selectedStudent.recentPermit || "Tidak ada izin aktif / santri mukim di pondok"}</p>
+                  </div>
+                </div>
+              )}
+
+              {activeDossierTab === "keuangan" && !isGuru && !isKesantrian && (
+                <div className="space-y-3">
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] text-slate-400 uppercase font-semibold">Status SPP Syahriyah</p>
                       <p className="text-sm font-bold text-slate-900">
                         {selectedStudent.tuitionStatus === "LUNAS" ? "Lunas Terverifikasi" : "Menunggak"}
                       </p>
@@ -2287,24 +2378,18 @@ export default function SantriClient({
                 </div>
               )}
 
-              {activeDossierTab === "absensi" && (
+              {activeDossierTab === "dokumen" && (
                 <div className="space-y-3">
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                    <div>
-                      <p className="text-[10px] text-slate-400 uppercase font-semibold">Tingkat Kehadiran KBM & Shalat</p>
-                      <p className="text-base font-bold text-emerald-700">{selectedStudent.attendanceRate}</p>
-                      <p className="text-[11px] text-slate-500">Sangat rajin dan tertib dalam kegiatan harian.</p>
+                  <div className="p-4 rounded-2xl bg-emerald-800 text-white space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] uppercase tracking-wider font-bold">KARTU TANDA SANTRI (KTS)</span>
+                      <span className="text-[10px] font-mono">AKTIF 2026</span>
                     </div>
-                    <Badge variant="success">Sangat Disiplin</Badge>
-                  </div>
-                </div>
-              )}
-
-              {activeDossierTab === "perizinan" && !isGuru && (
-                <div className="space-y-3">
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                    <p className="text-[10px] text-slate-400 uppercase font-semibold">Riwayat Izin Terkini</p>
-                    <p className="text-xs font-semibold text-slate-800 mt-1">{selectedStudent.recentPermit || "Tidak ada izin aktif"}</p>
+                    <div>
+                      <p className="text-sm font-bold">{selectedStudent.name}</p>
+                      <p className="text-[11px] text-emerald-200 font-mono">NIS: {selectedStudent.nis}</p>
+                      <p className="text-[10px] text-emerald-100">{selectedStudent.className} • {selectedStudent.roomName}</p>
+                    </div>
                   </div>
                 </div>
               )}

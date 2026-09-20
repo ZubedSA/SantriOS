@@ -69,6 +69,7 @@ export default async function DashboardLayout({
             Navigasi ({session.role.name})
           </div>
 
+          {/* 1. BENDAHARA */}
           {session.role.name === "BENDAHARA" && (
             <>
               <Link href="/dashboard" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
@@ -81,7 +82,11 @@ export default async function DashboardLayout({
               </Link>
               <Link href="/dashboard/finance/billing" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <Receipt className="w-4 h-4 text-teal-400" />
-                <span>Tagihan & Piutang Santri</span>
+                <span>Tagihan & Tagihan Massal</span>
+              </Link>
+              <Link href="/dashboard/finance?tab=pengajuan" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <FileCheck className="w-4 h-4 text-amber-400" />
+                <span>Pengajuan Biaya (Approval)</span>
               </Link>
               <Link href="/dashboard/santri" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <Users className="w-4 h-4 text-sky-400" />
@@ -94,126 +99,88 @@ export default async function DashboardLayout({
             </>
           )}
 
+          {/* 2. GURU (dengan Assignment Tahfizh) */}
           {session.role.name === "GURU" && (
             <>
               <Link href="/dashboard" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <LayoutDashboard className="w-4 h-4 text-emerald-400" />
-                <span>Jadwal & Tugas</span>
+                <span>Jadwal Mengajar & KBM</span>
               </Link>
               <Link href="/dashboard/absensi" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Absensi KBM & Tahfizh</span>
+                <span>Absensi Cepat KBM</span>
               </Link>
-              <Link href="/dashboard/santri" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+              <Link href="/dashboard/santri?tab=kelas" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <Users className="w-4 h-4 text-teal-400" />
-                <span>Kelas & Rapor Nilai</span>
+                <span>Kelas Saya & Rapor Nilai</span>
               </Link>
-              <Link href="/dashboard/activities" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <BookOpen className="w-4 h-4 text-sky-400" />
-                <span>Silabus & Materi</span>
+              <Link href="/dashboard/activities?tab=tahfizh" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <BookOpen className="w-4 h-4 text-amber-400" />
+                <span>Setoran & Halaqah Tahfizh</span>
+              </Link>
+              <Link href="/dashboard/activities?tab=tugas" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <FileText className="w-4 h-4 text-sky-400" />
+                <span>Tugas & Silabus</span>
               </Link>
             </>
           )}
 
+          {/* 3. KESANTRIAN / KEDISIPLINAN */}
           {(session.role.name === "KESANTRIAN" || session.role.name === "MUSYRIF") && (
             <>
               <Link href="/dashboard" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <Building className="w-4 h-4 text-emerald-400" />
-                <span>Kontrol Asrama & Disiplin</span>
-              </Link>
-              <Link href="/dashboard/absensi" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <CheckCircle2 className="w-4 h-4 text-teal-400" />
-                <span>Presensi Shalat & Malam</span>
-              </Link>
-              <Link href="/dashboard/activities?tab=perizinan" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <FileCheck className="w-4 h-4 text-amber-400" />
-                <span>Perizinan Gerbang</span>
+                <span>Dashboard Kesantrian</span>
               </Link>
               <Link href="/dashboard/activities?tab=disiplin" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <ShieldAlert className="w-4 h-4 text-rose-400" />
-                <span>Pelanggaran & Ta'zir</span>
+                <span>Pelanggaran & Ta'zir (Poin)</span>
               </Link>
-              <Link href="/dashboard/santri" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <Users className="w-4 h-4 text-sky-400" />
-                <span>Kamar & Santri Mukim</span>
-              </Link>
-            </>
-          )}
-
-          {session.role.name === "WALI_SANTRI" && (
-            <>
-              <Link href="/dashboard" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <LayoutDashboard className="w-4 h-4 text-emerald-400" />
-                <span>Beranda Wali</span>
+              <Link href="/dashboard/activities?tab=perizinan" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <FileCheck className="w-4 h-4 text-amber-400" />
+                <span>Izin Gerbang & Belum Kembali</span>
               </Link>
               <Link href="/dashboard/absensi" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <CheckCircle2 className="w-4 h-4 text-teal-400" />
-                <span>Kehadiran Anak</span>
+                <span>Presensi Shalat & Ibadah</span>
               </Link>
-              <Link href="/dashboard/santri" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+              <Link href="/dashboard/santri?tab=asrama" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <Users className="w-4 h-4 text-sky-400" />
-                <span>Profil Anak</span>
-              </Link>
-              <Link href="/dashboard/activities" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <BookOpen className="w-4 h-4 text-amber-400" />
-                <span>Capaian Hafalan</span>
-              </Link>
-              <Link href="/dashboard/finance" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <CreditCard className="w-4 h-4 text-emerald-400" />
-                <span>Tagihan SPP</span>
+                <span>Kamar & Mutasi Asrama</span>
               </Link>
             </>
           )}
 
-          {session.role.name === "SUPER_ADMIN" && (
+          {/* 4. KIAI / PENGASUH (Executive Mode) */}
+          {(session.role.name === "KIAI" || session.role.name === "OWNER") && (
             <>
               <Link href="/dashboard" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <LayoutDashboard className="w-4 h-4 text-emerald-400" />
-                <span>Platform SaaS</span>
+                <span>Dashboard Eksekutif</span>
               </Link>
-              <Link href="/dashboard/santri" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <Building className="w-4 h-4 text-teal-400" />
-                <span>Daftar Pesantren</span>
-              </Link>
-              <Link href="/modules" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <Grid className="w-4 h-4 text-sky-400" />
-                <span>Modul Platform</span>
-              </Link>
-              <Link href="/audit" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <ShieldAlert className="w-4 h-4 text-amber-400" />
-                <span>Audit Log SaaS</span>
-              </Link>
-            </>
-          )}
-
-          {session.role.name === "OWNER" && (
-            <>
-              <Link href="/dashboard" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <LayoutDashboard className="w-4 h-4 text-emerald-400" />
-                <span>Ringkasan Eksekutif</span>
-              </Link>
-              <Link href="/dashboard/absensi" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+              <Link href="/dashboard?tab=kondisi" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <CheckCircle2 className="w-4 h-4 text-teal-400" />
-                <span>Monitoring Absensi</span>
+                <span>Kondisi Pesantren (Radar)</span>
+              </Link>
+              <Link href="/dashboard?tab=persetujuan" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <FileCheck className="w-4 h-4 text-amber-400" />
+                <span>Persetujuan & Approval</span>
+              </Link>
+              <Link href="/dashboard?tab=disposisi" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <FileText className="w-4 h-4 text-sky-400" />
+                <span>Disposisi Tugas Kiai</span>
               </Link>
               <Link href="/dashboard/finance" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <CreditCard className="w-4 h-4 text-emerald-400" />
-                <span>Laporan Keuangan & Kas</span>
+                <span>Keuangan & Arus Kas</span>
               </Link>
-              <Link href="/dashboard/activities" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+              <Link href="/dashboard/activities?tab=tahfizh" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <BookOpen className="w-4 h-4 text-teal-400" />
-                <span>Mutu & Capaian Santri</span>
+                <span>Capaian Mutu & Tahfizh</span>
               </Link>
               <Link href="/dashboard/santri" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <Users className="w-4 h-4 text-sky-400" />
-                <span>Direktori Santri</span>
-              </Link>
-              <Link href="/modules" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
-                <Grid className="w-4 h-4 text-purple-400" />
-                <span>Modul & Paket SaaS</span>
-                <span className="ml-auto text-[10px] bg-slate-800 px-2 py-0.5 rounded-full text-slate-400">
-                  {session.activeModules.length}
-                </span>
+                <span>Direktori Santri 360</span>
               </Link>
               <Link href="/audit" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <ShieldAlert className="w-4 h-4 text-rose-400" />
@@ -222,6 +189,7 @@ export default async function DashboardLayout({
             </>
           )}
 
+          {/* 5. ADMIN / TU / SEKRETARIS */}
           {session.role.name === "ADMIN" && (
             <>
               <Link href="/dashboard" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
@@ -230,19 +198,27 @@ export default async function DashboardLayout({
               </Link>
               <Link href="/dashboard/santri" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <Users className="w-4 h-4 text-teal-400" />
-                <span>Data Induk & PPDB</span>
+                <span>Data Santri & Wali</span>
               </Link>
               <Link href="/dashboard/santri?tab=dokumen" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <FileText className="w-4 h-4 text-emerald-400" />
-                <span>Cetak Dokumen & KTS</span>
+                <span>Surat & Dokumen Resmi</span>
+              </Link>
+              <Link href="/dashboard/santri?tab=ppdb" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <Building className="w-4 h-4 text-indigo-400" />
+                <span>PPDB Santri Baru</span>
+              </Link>
+              <Link href="/dashboard?tab=disposisi" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <FileCheck className="w-4 h-4 text-amber-400" />
+                <span>Tindak Lanjut Disposisi</span>
               </Link>
               <Link href="/dashboard/absensi" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <CheckCircle2 className="w-4 h-4 text-teal-400" />
-                <span>Absensi Santri</span>
+                <span>Absensi & Rekap Pondok</span>
               </Link>
               <Link href="/dashboard/activities" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <CalendarCheck className="w-4 h-4 text-sky-400" />
-                <span>Agenda Pondok</span>
+                <span>Agenda & Pengumuman</span>
               </Link>
               <Link href="/modules" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <Grid className="w-4 h-4 text-purple-400" />
