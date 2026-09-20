@@ -107,8 +107,18 @@ export default function SantriClient({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
   const [selectedClass, setSelectedClass] = useState<string>("ALL");
-  const [selectedStudent, setSelectedStudent] = useState<StudentItem | null>(null);
-  const [activeDossierTab, setActiveDossierTab] = useState<"ringkasan" | "tahfizh" | "keuangan" | "absensi" | "perizinan">("ringkasan");
+  type DossierTab =
+    | "ringkasan"
+    | "wali"
+    | "akademik"
+    | "tahfizh"
+    | "absensi"
+    | "kedisiplinan"
+    | "pembinaan"
+    | "perizinan"
+    | "keuangan"
+    | "dokumen";
+  const [activeDossierTab, setActiveDossierTab] = useState<DossierTab>("ringkasan");
 
   // Bendahara State
   const [tuitionFilter, setTuitionFilter] = useState<"ALL" | "LUNAS" | "MENUNGGAK">("ALL");
