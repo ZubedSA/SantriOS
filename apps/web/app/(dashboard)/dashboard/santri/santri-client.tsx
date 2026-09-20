@@ -32,6 +32,7 @@ import {
   Home,
   FileText,
   QrCode,
+  Send,
 } from "lucide-react";
 import { formatRupiah } from "@santrios/utils";
 import { createStudentAction, updateStudentAction, deleteStudentAction } from "@/actions/santri";
@@ -107,6 +108,7 @@ export default function SantriClient({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
   const [selectedClass, setSelectedClass] = useState<string>("ALL");
+  const [selectedStudent, setSelectedStudent] = useState<StudentItem | null>(null);
   type DossierTab =
     | "ringkasan"
     | "wali"
