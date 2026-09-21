@@ -395,6 +395,9 @@ export default function SuratClient({ tenantName, userRole, userName }: SuratCli
               </button>
             </div>
           </div>
+        </div>
+      )}
+
       {/* Modal Edit Surat */}
       {editingSurat && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
