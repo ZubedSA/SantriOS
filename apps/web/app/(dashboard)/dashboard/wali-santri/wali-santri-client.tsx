@@ -80,7 +80,7 @@ export default function WaliSantriClient({ tenantName }: WaliSantriClientProps) 
     const newWali = {
       id: `WLI-00${guardians.length + 1}`,
       name: (fd.get("name") as string) || "Wali Santri Baru",
-      santriList: santriStr.split(",").map((s) => s.trim()),
+      santriList: santriStr.split(",").map((s: string) => s.trim()),
       relation: (fd.get("relation") as string) || "Ayah Kandung",
       phone: (fd.get("phone") as string) || "0812-0000-0000",
       city: (fd.get("city") as string) || "Kota Domisili",
@@ -97,7 +97,7 @@ export default function WaliSantriClient({ tenantName }: WaliSantriClientProps) 
     if (!editingWali) return;
     const form = e.currentTarget;
     const fd = new FormData(form);
-    const santriStr = (fd.get("santriList") as string) || editingWali.santriList.join(", ");
+    const santriStr: string = (fd.get("santriList") as string) || (editingWali.santriList?.join(", ") ?? "");
     const updated = {
       ...editingWali,
       name: (fd.get("name") as string) || editingWali.name,
@@ -105,7 +105,7 @@ export default function WaliSantriClient({ tenantName }: WaliSantriClientProps) 
       phone: (fd.get("phone") as string) || editingWali.phone,
       city: (fd.get("city") as string) || editingWali.city,
       portalStatus: (fd.get("portalStatus") as string) || editingWali.portalStatus,
-      santriList: santriStr.split(",").map((s) => s.trim()),
+      santriList: santriStr.split(",").map((s: string) => s.trim()),
     };
     setGuardians(guardians.map((g) => (g.id === editingWali.id ? updated : g)));
     setEditingWali(null);

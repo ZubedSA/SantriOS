@@ -98,7 +98,7 @@ export default function GuruStafClient({ tenantName }: GuruStafClientProps) {
       name: (fd.get("name") as string) || "Pegawai Baru",
       nip: (fd.get("nip") as string) || `19900101-2026-0${teachers.length + 1}`,
       roleType: roleType as "GURU" | "STAFF",
-      assignments: assignmentsStr.split(",").map((s) => s.trim()),
+      assignments: assignmentsStr.split(",").map((s: string) => s.trim()),
       phone: (fd.get("phone") as string) || "0812-0000-0000",
       email: (fd.get("email") as string) || "pegawai@santrios.id",
       status: "AKTIF",
@@ -115,7 +115,7 @@ export default function GuruStafClient({ tenantName }: GuruStafClientProps) {
     if (!editingTeacher) return;
     const form = e.currentTarget;
     const fd = new FormData(form);
-    const assignmentsStr = (fd.get("assignments") as string) || editingTeacher.assignments.join(", ");
+    const assignmentsStr: string = (fd.get("assignments") as string) || (editingTeacher.assignments?.join(", ") ?? "");
     const updated = {
       ...editingTeacher,
       name: (fd.get("name") as string) || editingTeacher.name,
@@ -124,7 +124,7 @@ export default function GuruStafClient({ tenantName }: GuruStafClientProps) {
       phone: (fd.get("phone") as string) || editingTeacher.phone,
       email: (fd.get("email") as string) || editingTeacher.email,
       halaqah: (fd.get("halaqah") as string) || editingTeacher.halaqah,
-      assignments: assignmentsStr.split(",").map((s) => s.trim()),
+      assignments: assignmentsStr.split(",").map((s: string) => s.trim()),
     };
     setTeachers(teachers.map((t) => (t.id === editingTeacher.id ? updated : t)));
     setEditingTeacher(null);
