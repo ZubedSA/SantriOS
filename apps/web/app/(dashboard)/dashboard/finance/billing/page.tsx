@@ -12,7 +12,7 @@ export default async function BillingPage() {
 
   // Peran GURU & KESANTRIAN murni fokus pembinaan, tidak mengelola tagihan santri
   if (session.role.name === "GURU" || session.role.name === "KESANTRIAN" || session.role.name === "MUSYRIF") {
-    redirect("/dashboard/activities");
+    redirect("/dashboard");
   }
 
   // Wali Santri diarahkan ke portal pembayaran & tagihan SPP mandiri

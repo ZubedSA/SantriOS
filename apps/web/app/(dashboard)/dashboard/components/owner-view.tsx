@@ -352,48 +352,10 @@ export function OwnerView({
           <h2 className="text-xl md:text-3xl font-extrabold tracking-tight">
             Assalamu&apos;alaikum, Kyai {userName} 👋
           </h2>
-
           <p className="text-xs md:text-sm text-emerald-100/80 leading-relaxed">
             Pusat kendali eksekutif untuk memantau stabilitas, memutuskan persetujuan strategis, serta mengarahkan kebijakan di{" "}
             <span className="font-semibold text-white">{tenantName}</span>.
           </p>
-        </div>
-
-        {/* Menu Kiai (Section 3.7 & Spec) */}
-        <div className="relative z-10 mt-6 pt-4 border-t border-emerald-800/40 flex flex-wrap gap-2">
-          {[
-            { id: "ringkasan", label: "Dashboard", icon: Sparkles },
-            { id: "kondisi", label: "Kondisi Pesantren (Radar)", icon: Activity },
-            { id: "persetujuan", label: "Persetujuan", icon: FileCheck, count: approvals.filter((a) => a.status === "PENDING").length },
-            { id: "disposisi", label: "Disposisi Kiai", icon: FileText, count: dispositions.filter((d) => d.status === "DALAM_PROSES").length },
-            { id: "akademik", label: "Akademik", icon: BookOpen },
-            { id: "tahfizh", label: "Tahfizh", icon: Award },
-            { id: "kesantrian", label: "Kesantrian", icon: Building },
-            { id: "laporan", label: "Laporan Eksekutif", icon: FileSpreadsheet },
-            { id: "notifikasi", label: "Notifikasi Strategis", icon: AlertCircle },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isSel = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                  isSel
-                    ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
-                    : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-                {tab.count !== undefined && tab.count > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px]">
-                    {tab.count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
         </div>
       </div>
 
@@ -493,8 +455,8 @@ export function OwnerView({
               </h3>
 
               <Card className="p-4 space-y-2.5">
-                <button
-                  onClick={() => setActiveTab("kondisi")}
+                <Link
+                  href="/dashboard/kondisi"
                   className="w-full p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 text-left transition-colors flex items-center justify-between text-xs font-semibold text-slate-800"
                 >
                   <span className="flex items-center gap-2">
@@ -502,9 +464,9 @@ export function OwnerView({
                     Radar Kondisi Pesantren
                   </span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
-                </button>
-                <button
-                  onClick={() => setActiveTab("persetujuan")}
+                </Link>
+                <Link
+                  href="/dashboard/persetujuan"
                   className="w-full p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-left transition-colors flex items-center justify-between text-xs font-semibold text-slate-800"
                 >
                   <span className="flex items-center gap-2">
@@ -512,9 +474,9 @@ export function OwnerView({
                     Hub Persetujuan Kiai
                   </span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
-                </button>
-                <button
-                  onClick={() => setActiveTab("disposisi")}
+                </Link>
+                <Link
+                  href="/dashboard/disposisi"
                   className="w-full p-2.5 rounded-xl bg-slate-50 hover:bg-sky-50 text-left transition-colors flex items-center justify-between text-xs font-semibold text-slate-800"
                 >
                   <span className="flex items-center gap-2">
@@ -522,9 +484,9 @@ export function OwnerView({
                     Kirim Disposisi ke TU
                   </span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
-                </button>
-                <button
-                  onClick={() => setActiveTab("laporan")}
+                </Link>
+                <Link
+                  href="/dashboard/laporan"
                   className="w-full p-2.5 rounded-xl bg-slate-50 hover:bg-purple-50 text-left transition-colors flex items-center justify-between text-xs font-semibold text-slate-800"
                 >
                   <span className="flex items-center gap-2">
@@ -532,7 +494,7 @@ export function OwnerView({
                     Cetak Laporan Eksekutif
                   </span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
-                </button>
+                </Link>
               </Card>
             </div>
           </div>
@@ -1037,7 +999,7 @@ export function OwnerView({
               </p>
             </div>
             <Link
-              href="/dashboard/santri?tab=kelas"
+              href="/dashboard/akademik"
               className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs"
             >
               Lihat Leger Nilai &rarr;
@@ -1078,7 +1040,7 @@ export function OwnerView({
               </p>
             </div>
             <Link
-              href="/dashboard/activities?tab=tahfizh"
+              href="/dashboard/tahfizh"
               className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold shadow-xs"
             >
               Jurnal Setoran Lengkap &rarr;
@@ -1124,7 +1086,7 @@ export function OwnerView({
               </p>
             </div>
             <Link
-              href="/dashboard?tab=pelanggaran"
+              href="/dashboard/kesantrian"
               className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs"
             >
               Manajemen Kesantrian &rarr;

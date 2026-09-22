@@ -333,47 +333,10 @@ export function KesantrianView({
           <h2 className="text-xl md:text-3xl font-extrabold tracking-tight">
             Assalamu&apos;alaikum, Ustadz {userName} 👋
           </h2>
-
           <p className="text-xs md:text-sm text-emerald-100/80 leading-relaxed">
             Pembinaan adab santri, penegakan tata tertib & poin ta&apos;zir, pengawasan perizinan gerbang, serta kontrol asrama di{" "}
             <span className="font-semibold text-white">{tenantName}</span>.
           </p>
-        </div>
-
-        {/* Menu Navigasi Kesantrian (Section 8.11 of Spec) */}
-        <div className="relative z-10 mt-6 pt-4 border-t border-emerald-800/40 flex flex-wrap gap-2">
-          {[
-            { id: "disiplin", label: "Pelanggaran & Poin", icon: ShieldAlert, count: violations.filter((v) => v.taazirStatus === "BELUM_TUNTAS").length },
-            { id: "prestasi", label: "Prestasi Santri", icon: Award },
-            { id: "pembinaan", label: "Pembinaan", icon: HeartHandshake },
-            { id: "tindakan", label: "Tindakan & Ta'zir", icon: Scale },
-            { id: "perizinan", label: "Perizinan", icon: FileCheck, count: permits.filter((p) => p.isOverdue).length },
-            { id: "kamar", label: "Asrama & Kamar", icon: BedDouble },
-            { id: "kegiatan", label: "Kegiatan Santri", icon: CalendarCheck },
-            { id: "laporan", label: "Laporan", icon: Printer },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isSel = selectedTab === tab.id || (tab.id === "disiplin" && (selectedTab === "pelanggaran" || selectedTab === "poin")) || (tab.id === "perizinan" && selectedTab.startsWith("perizinan")) || (tab.id === "kamar" && (selectedTab.startsWith("asrama") || selectedTab === "kamar"));
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setSelectedTab(tab.id as any)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                  isSel
-                    ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
-                    : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-                {tab.count !== undefined && tab.count > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px]">
-                    {tab.count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
         </div>
       </div>
 
@@ -704,10 +667,10 @@ export function KesantrianView({
               Jadwal Kegiatan & Disiplin Harian Santri (Section 8.9)
             </h3>
             <Link
-              href="/dashboard/absensi"
+              href="/dashboard/kegiatan"
               className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-semibold"
             >
-              Presensi Kegiatan &rarr;
+              Buka Jadwal Kegiatan &rarr;
             </Link>
           </div>
 

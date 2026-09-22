@@ -282,125 +282,6 @@ export function GuruView({
             ))}
           </div>
         </div>
-
-        {/* Tab Navigasi Guru (Section 5 & 6) */}
-        <div className="relative z-10 mt-6 pt-4 border-t border-emerald-800/40 flex flex-wrap gap-2">
-          <button
-            onClick={() => setActiveTab("jadwal")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-              activeTab === "jadwal"
-                ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
-                : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
-            }`}
-          >
-            <Calendar className="w-3.5 h-3.5" />
-            <span>Jadwal Saya</span>
-          </button>
-
-          <Link
-            href="/dashboard/santri?tab=kelas"
-            className="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
-          >
-            <Users className="w-3.5 h-3.5" />
-            <span>Kelas Saya</span>
-          </Link>
-
-          <Link
-            href="/dashboard/absensi"
-            className="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
-          >
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Absensi Cepat KBM</span>
-          </Link>
-
-          <button
-            onClick={() => setActiveTab("nilai")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-              activeTab === "nilai"
-                ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
-                : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
-            }`}
-          >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Nilai Rapor</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("tugas")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-              activeTab === "tugas"
-                ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
-                : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
-            }`}
-          >
-            <CheckSquare className="w-3.5 h-3.5" />
-            <span>Tugas</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("perkembangan")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-              activeTab === "perkembangan"
-                ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
-                : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
-            }`}
-          >
-            <Users className="w-3.5 h-3.5" />
-            <span>Perkembangan Santri</span>
-          </button>
-
-          {hasTahfizh && (
-            <>
-              <button
-                onClick={() => setActiveTab("tahfizh")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                  activeTab === "tahfizh" || activeTab === "tahfizh_setoran"
-                    ? "bg-amber-400 text-slate-950 font-bold shadow-md"
-                    : "bg-emerald-900/40 text-amber-300 hover:bg-emerald-900/80 border border-emerald-700/40"
-                }`}
-              >
-                <Award className="w-3.5 h-3.5" />
-                <span>Tahfizh: Setoran</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("tahfizh_murajaah")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                  activeTab === "tahfizh_murajaah"
-                    ? "bg-amber-400 text-slate-950 font-bold shadow-md"
-                    : "bg-emerald-900/40 text-amber-300 hover:bg-emerald-900/80 border border-emerald-700/40"
-                }`}
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>Murajaah</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("tahfizh_ujian")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                  activeTab === "tahfizh_ujian"
-                    ? "bg-amber-400 text-slate-950 font-bold shadow-md"
-                    : "bg-emerald-900/40 text-amber-300 hover:bg-emerald-900/80 border border-emerald-700/40"
-                }`}
-              >
-                <Award className="w-3.5 h-3.5" />
-                <span>Ujian Tahfizh</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("tahfizh_laporan")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                  activeTab === "tahfizh_laporan"
-                    ? "bg-amber-400 text-slate-950 font-bold shadow-md"
-                    : "bg-emerald-900/40 text-amber-300 hover:bg-emerald-900/80 border border-emerald-700/40"
-                }`}
-              >
-                <FileText className="w-3.5 h-3.5" />
-                <span>Laporan Tahfizh</span>
-              </button>
-            </>
-          )}
-        </div>
       </div>
 
       {/* KPI Cards */}
@@ -654,7 +535,7 @@ export function GuruView({
               Penilaian Akademik & Rapor Santri (Section 5.6)
             </h3>
             <Link
-              href="/dashboard/santri?tab=kelas"
+              href="/dashboard/nilai"
               className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold"
             >
               Buka Leger Nilai &rarr;

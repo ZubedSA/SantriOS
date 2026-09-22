@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { StatCard, Card, Badge } from "@santrios/ui";
 import {
   Users,
-  UserPlus,
   Home,
   ShieldCheck,
   Grid,
@@ -374,79 +373,6 @@ export function AdminView({
             <span className="font-semibold text-white">{tenantName}</span>.
           </p>
         </div>
-
-        {/* Menu Navigasi Admin (Section 4.15 of Spec) */}
-        <div className="relative z-10 mt-6 pt-4 border-t border-emerald-800/40 flex flex-wrap gap-2">
-          {[
-            { id: "meja_kerja", label: "Meja Kerja TU", icon: Clock },
-            { id: "surat", label: "Surat Resmi", icon: FileText },
-            { id: "dokumen", label: "Dokumen", icon: FileText },
-            { id: "perizinan", label: "Perizinan", icon: FileCheck },
-            { id: "disposisi", label: "Disposisi Kiai", icon: FileCheck, count: adminDispositions.filter((d) => d.status === "DALAM_PROSES").length },
-            { id: "ppdb", label: "PPDB", icon: GraduationCap, count: ppdbApplicants.filter((p) => p.status === "LULUS_SELEKSI").length },
-            { id: "guru_staf", label: "Guru & Staff", icon: BookOpen },
-            { id: "wali_santri", label: "Wali Santri", icon: Phone },
-            { id: "master", label: "Master Data", icon: Layers },
-            { id: "kelas", label: "Kelas & Jadwal", icon: Grid },
-            { id: "kegiatan", label: "Kegiatan", icon: CalendarCheck },
-            { id: "pengumuman", label: "Pengumuman", icon: Bell },
-            { id: "laporan", label: "Laporan", icon: FileSpreadsheet },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isSel = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                  isSel
-                    ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
-                    : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-                {tab.count !== undefined && tab.count > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px]">
-                    {tab.count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Action Bar: Quick Actions (Section 4.2 of Spec) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Link
-          href="/dashboard/santri"
-          className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition-all"
-        >
-          <UserPlus className="w-4 h-4" />
-          <span>+ Tambah Santri Baru</span>
-        </Link>
-        <button
-          onClick={() => setActiveTab("surat")}
-          className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold shadow-sm transition-all"
-        >
-          <FileText className="w-4 h-4 text-emerald-600" />
-          <span>Buat Surat Keterangan</span>
-        </button>
-        <button
-          onClick={() => setActiveModal("KTS")}
-          className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold shadow-sm transition-all"
-        >
-          <QrCode className="w-4 h-4 text-sky-600" />
-          <span>Cetak KTS Santri</span>
-        </button>
-        <Link
-          href="/dashboard/finance"
-          className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold shadow-sm transition-all"
-        >
-          <CreditCard className="w-4 h-4 text-teal-600" />
-          <span>Loket Pembayaran TU</span>
-        </Link>
       </div>
 
       {/* KPI Cards */}
@@ -600,10 +526,10 @@ export function AdminView({
               </p>
             </div>
             <Link
-              href="/dashboard/santri"
+              href="/dashboard/ppdb"
               className="text-xs font-semibold text-emerald-700 hover:underline"
             >
-              Lihat Seluruh Santri &rarr;
+              Buka Modul PPDB &rarr;
             </Link>
           </div>
 
@@ -851,7 +777,7 @@ export function AdminView({
               Administrasi & Rekap Perizinan Santri (Section 4.8)
             </h3>
             <Link
-              href="/dashboard/activities?tab=perizinan"
+              href="/dashboard/perizinan"
               className="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold"
             >
               Buka Gerbang Keluar &rarr;

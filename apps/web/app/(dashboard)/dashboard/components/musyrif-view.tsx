@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import { Card, StatCard, Badge } from "@santrios/ui";
 import {
   Home,
@@ -7,11 +6,8 @@ import {
   CheckCircle2,
   FileCheck,
   ShieldAlert,
-  Clock,
-  BedDouble,
   Check,
   X,
-  PlusCircle,
 } from "lucide-react";
 
 interface MusyrifViewProps {
@@ -96,38 +92,6 @@ export function MusyrifView({ tenantName, userName }: MusyrifViewProps) {
             <span className="font-semibold text-white">{tenantName}</span>.
           </p>
         </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Link
-          href="/dashboard/absensi"
-          className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition-all active:scale-95"
-        >
-          <CheckCircle2 className="w-4 h-4" />
-          <span>Presensi Shalat Waktu</span>
-        </Link>
-        <Link
-          href="/dashboard/activities?tab=perizinan"
-          className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold shadow-sm transition-all active:scale-95"
-        >
-          <FileCheck className="w-4 h-4 text-emerald-600" />
-          <span>Verifikasi Perizinan</span>
-        </Link>
-        <Link
-          href="/dashboard/activities?tab=disiplin"
-          className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold shadow-sm transition-all active:scale-95"
-        >
-          <ShieldAlert className="w-4 h-4 text-rose-500" />
-          <span>Catat Pelanggaran</span>
-        </Link>
-        <Link
-          href="/dashboard/santri"
-          className="flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold shadow-sm transition-all active:scale-95"
-        >
-          <BedDouble className="w-4 h-4 text-sky-600" />
-          <span>Sidak Kamar & Asrama</span>
-        </Link>
       </div>
 
       {/* KPI Cards */}

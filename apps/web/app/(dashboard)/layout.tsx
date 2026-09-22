@@ -22,6 +22,7 @@ import {
   FileSpreadsheet,
 } from "lucide-react";
 import { RoleSwitcher } from "./components/role-switcher";
+import { MobileMenuTrigger } from "./components/mobile-menu-trigger";
 import DashboardClientShell from "./client-shell";
 
 export const dynamic = "force-dynamic";
@@ -619,7 +620,8 @@ export default async function DashboardLayout({
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Top Header (hidden on desktop) */}
         <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 backdrop-blur-md md:hidden">
-          <div className="flex items-center gap-2.5 overflow-hidden">
+          <div className="flex items-center gap-2 overflow-hidden">
+            <MobileMenuTrigger />
             <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center font-bold text-white text-xs shadow-sm shrink-0">
               S
             </div>
@@ -682,8 +684,13 @@ export default async function DashboardLayout({
         </main>
       </div>
 
-      {/* Client Shell for Mobile Navigation Interactivity */}
-      <DashboardClientShell role={session.role.name} />
+      {/* Client Shell for Mobile Navigation Interactivity & Full Drawer */}
+      <DashboardClientShell
+        role={session.role.name}
+        tenant={{ name: session.tenant.name, slug: session.tenant.slug }}
+        user={{ name: session.user.name, email: session.user.email }}
+        activeModules={session.activeModules}
+      />
     </div>
   );
 }

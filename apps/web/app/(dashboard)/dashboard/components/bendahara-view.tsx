@@ -325,44 +325,6 @@ export function BendaharaView({
             <span className="font-semibold text-white">{tenantName}</span>.
           </p>
         </div>
-
-        {/* Menu Navigasi Bendahara (Section 7.12 of Spec) */}
-        <div className="relative z-10 mt-6 pt-4 border-t border-emerald-800/40 flex flex-wrap gap-2">
-          {[
-            { id: "ringkasan", label: "Dashboard", icon: Wallet },
-            { id: "tagihan_massal", label: "Tagihan Massal", icon: Receipt },
-            { id: "tunggakan", label: "Tunggakan", icon: AlertTriangle, count: arrearsList.length },
-            { id: "kasir", label: "Kasir Pembayaran", icon: CreditCard },
-            { id: "pengajuan", label: "Pengajuan Pengeluaran", icon: ArrowDownCircle, count: expenseList.filter((e) => e.status === "MENUNGGU_APPROVAL_KIAI").length },
-            { id: "kas_bank", label: "Kas & Bank", icon: Building },
-            { id: "rekonsiliasi", label: "Rekonsiliasi Bank", icon: CheckCircle2 },
-            { id: "anggaran", label: "Anggaran", icon: FileSpreadsheet },
-            { id: "laporan", label: "Laporan Keuangan", icon: FileText },
-            { id: "pengaturan_keuangan", label: "Pengaturan", icon: Layers },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isSel = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                  isSel
-                    ? "bg-emerald-500 text-slate-950 font-bold shadow-md"
-                    : "bg-emerald-900/40 text-emerald-200 hover:bg-emerald-900/80 border border-emerald-700/40"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-                {tab.count !== undefined && tab.count > 0 && (
-                  <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px]">
-                    {tab.count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
       </div>
 
       {/* KPI Stats */}

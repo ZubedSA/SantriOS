@@ -137,7 +137,7 @@ export function WaliView({ tenantName, userName }: WaliViewProps) {
               <span>Hubungi Kesantrian</span>
             </a>
             <Link
-              href="/dashboard/activities?tab=perizinan&action=izin"
+              href="/dashboard/perizinan"
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-sm transition-all"
             >
               <FileCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -170,8 +170,8 @@ export function WaliView({ tenantName, userName }: WaliViewProps) {
             <span>Presensi Shalat &amp; KBM</span>
           </Link>
           <Link
-            href="/dashboard/activities?tab=tahfizh"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-800 text-[11px] font-semibold shadow-xs transition-all"
+            href="/dashboard/tahfizh"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-800 text-[11px] font-semibold shadow-xs transition-all"
           >
             <BookOpen className="w-3.5 h-3.5 text-amber-600" />
             <span>Buku Mutaba&apos;ah Tahfizh</span>

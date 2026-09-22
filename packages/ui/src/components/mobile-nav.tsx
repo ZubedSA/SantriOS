@@ -6,9 +6,10 @@ import { LayoutDashboard, Users, Activity, CreditCard, Grid } from "lucide-react
 
 export interface MobileNavItem {
   label: string;
-  href: string;
+  href?: string;
   icon: React.ReactNode;
   active?: boolean;
+  onClick?: () => void;
 }
 
 export interface MobileNavProps {
@@ -29,7 +30,7 @@ export function MobileNav({
   const defaultItems: MobileNavItem[] = [
     { label: "Home", href: "/dashboard", icon: <LayoutDashboard className="w-5 h-5" /> },
     { label: "Santri", href: "/dashboard/santri", icon: <Users className="w-5 h-5" /> },
-    { label: "Aktivitas", href: "/dashboard/activities", icon: <Activity className="w-5 h-5" /> },
+    { label: "Aktivitas", href: "/dashboard/santri", icon: <Activity className="w-5 h-5" /> },
     { label: "Keuangan", href: "/dashboard/finance", icon: <CreditCard className="w-5 h-5" /> },
     { label: "Lainnya", href: "/modules", icon: <Grid className="w-5 h-5" /> },
   ];
@@ -43,14 +44,35 @@ export function MobileNav({
         className
       )}
     >
-      {navItems.map((item) => {
-        const isActive = currentPath === item.href || (item.href !== "/dashboard" && currentPath.startsWith(item.href));
+      {navItems.map((item, index) => {
+        const key = item.href || `${item.label}-${index}`;
+        const isActive =
+          item.active !== undefined
+            ? item.active
+            : item.href
+            ? currentPath === item.href || (item.href !== "/dashboard" && currentPath.startsWith(item.href))
+            : false;
+
+        const handleClick = () => {
+          if (item.onClick) {
+            item.onClick();
+          } else if (item.href && onNavigate) {
+            onNavigate(item.href);
+          }
+        };
+
+        const handlePrefetch = () => {
+          if (item.href && onPrefetch) {
+            onPrefetch(item.href);
+          }
+        };
+
         return (
           <button
-            key={item.href}
-            onClick={() => onNavigate && onNavigate(item.href)}
-            onMouseEnter={() => onPrefetch && onPrefetch(item.href)}
-            onTouchStart={() => onPrefetch && onPrefetch(item.href)}
+            key={key}
+            onClick={handleClick}
+            onMouseEnter={handlePrefetch}
+            onTouchStart={handlePrefetch}
             className={cn(
               "flex flex-col items-center justify-center gap-1 py-1 px-3 rounded-xl transition-all duration-150 min-w-[56px]",
               isActive

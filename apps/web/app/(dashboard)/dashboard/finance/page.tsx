@@ -19,7 +19,7 @@ export default async function FinancePage({
 
   // Peran GURU & KESANTRIAN murni fokus pembinaan, tidak mengelola kasir SPP
   if (session.role.name === "GURU" || session.role.name === "KESANTRIAN" || session.role.name === "MUSYRIF") {
-    redirect("/dashboard/activities");
+    redirect("/dashboard");
   }
 
   let initialTransactions: any[] = [];

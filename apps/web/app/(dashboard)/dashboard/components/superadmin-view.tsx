@@ -4,12 +4,8 @@ import {
   Globe,
   Building2,
   ShieldCheck,
-  CreditCard,
   Layers,
-  ArrowUpRight,
   Server,
-  Activity,
-  PlusCircle,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -80,31 +76,6 @@ export function SuperAdminView({ userName }: SuperAdminViewProps) {
             Pusat pemantauan seluruh pondok pesantren (multi-tenant), lisensi berlangganan, ketersediaan database, dan audit keamanan global.
           </p>
         </div>
-      </div>
-
-      {/* Action Bar */}
-      <div className="flex flex-wrap items-center gap-3">
-        <Link
-          href="/onboarding"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition-all"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>+ Daftarkan Pesantren Baru</span>
-        </Link>
-        <Link
-          href="/modules"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold shadow-sm transition-all"
-        >
-          <Layers className="w-4 h-4 text-purple-600" />
-          <span>Kelola Modul Global</span>
-        </Link>
-        <Link
-          href="/audit"
-          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold shadow-sm transition-all"
-        >
-          <Activity className="w-4 h-4 text-sky-600" />
-          <span>Audit Log Platform</span>
-        </Link>
       </div>
 
       {/* KPIs */}

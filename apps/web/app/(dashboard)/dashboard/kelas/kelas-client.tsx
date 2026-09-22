@@ -214,7 +214,7 @@ export default function KelasClient({ tenantName }: KelasClientProps) {
               </div>
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
                 <Link
-                  href={`/dashboard/santri?tab=kelas&class=${encodeURIComponent(c.name)}`}
+                  href={`/dashboard/santri?class=${encodeURIComponent(c.name)}`}
                   className="text-sky-700 font-bold hover:underline"
                 >
                   Lihat Santri &rarr;
