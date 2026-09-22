@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { StatCard, Card, Badge } from "@santrios/ui";
 import {
   Users,
+  UserPlus,
   Home,
   ShieldCheck,
   Grid,
