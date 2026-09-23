@@ -14,9 +14,21 @@ const DEMO_FALLBACK_USERS: Record<
     permissions: string[];
   }
 > = {
+  "kiai@demo.local": {
+    name: "KH. Abdullah Munir",
+    role: "KIAI",
+    permissions: [
+      "students.view", "students.create", "students.edit", "students.delete",
+      "finance.view", "finance.create", "finance.export",
+      "attendance.view", "attendance.mark",
+      "tahfizh.view", "tahfizh.input",
+      "permits.view", "permits.approve",
+      "settings.view", "settings.edit",
+    ],
+  },
   "owner@demo.local": {
     name: "KH. Abdullah Munir",
-    role: "OWNER",
+    role: "KIAI",
     permissions: [
       "students.view", "students.create", "students.edit", "students.delete",
       "finance.view", "finance.create", "finance.export",
@@ -90,36 +102,9 @@ export async function POST(req: NextRequest) {
 
     const { email, password } = parsed.data;
 
-    let user: any = null;
-    let dbConnected = true;
-
-    // 1. Try querying real database
-    try {
-      user = await prisma.user.findUnique({
-        where: { email },
-        include: {
-          userRoles: {
-            include: {
-              tenant: true,
-              role: {
-                include: {
-                  permissions: {
-                    include: { permission: true },
-                  },
-                },
-              },
-            },
-          },
-        },
-      });
-    } catch (dbError) {
-      console.warn("Database query skipped or failed, checking demo fallback:", dbError);
-      dbConnected = false;
-    }
-
-    // 2. Fallback to demo accounts if DB is offline or user not found in DB
+    // 1. Instant Fast-Path for Demo accounts (zero DB latency, offline resilient)
     const demoFallback = DEMO_FALLBACK_USERS[email.toLowerCase()];
-    if ((!user || !dbConnected) && demoFallback && password === "Demo123456!") {
+    if (demoFallback && password === "Demo123456!") {
       const demoModules: ModuleKey[] = [
         "CORE", "SANTRI", "KEUANGAN", "ABSENSI", "TAHFIZH", "AKADEMIK", "ASRAMA", "PERIZINAN", "WALI_SANTRI"
       ];
@@ -163,6 +148,31 @@ export async function POST(req: NextRequest) {
       });
 
       return response;
+    }
+
+    let user: any = null;
+
+    // 2. Query real database for registered users
+    try {
+      user = await prisma.user.findUnique({
+        where: { email },
+        include: {
+          userRoles: {
+            include: {
+              tenant: true,
+              role: {
+                include: {
+                  permissions: {
+                    include: { permission: true },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+    } catch (dbError) {
+      console.warn("Database query skipped or failed:", dbError);
     }
 
     if (!user || !verifyPassword(password, user.passwordHash)) {

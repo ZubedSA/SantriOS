@@ -11,7 +11,8 @@
     "clean": "turbo run clean && rm -rf node_modules",
     "db:generate": "node node_modules/prisma/build/index.js generate --schema=packages/database/prisma/schema.prisma",
     "db:push": "node node_modules/prisma/build/index.js db push --schema=packages/database/prisma/schema.prisma",
-    "db:seed": "node node_modules/tsx/dist/cli.mjs packages/database/prisma/seed.ts"
+    "db:seed": "node node_modules/tsx/dist/cli.mjs packages/database/prisma/seed.ts",
+    "db:reset": "node node_modules/tsx/dist/cli.mjs packages/database/prisma/reset-and-seed.ts"
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^0.3.0",

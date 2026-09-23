@@ -65,6 +65,152 @@ export default function TahfizhClient({ tenantName }: TahfizhClientProps) {
     },
   ]);
 
+  // Tab 2: Muraja'ah Berkala State
+  const [murajaahList, setMurajaahList] = useState([
+    {
+      id: "MRJ-01",
+      santri: "Muhammad Fatih",
+      kelas: "Kelas Ulya 2",
+      juzRange: "Juz 1 s/d 5",
+      cycle: "Putaran Pekanan Ke-3",
+      statusMutqin: "MUTQIN",
+      testedBy: "Ustadz Ahmad Fauzi, Lc.",
+      lastTested: "Hari Ini, 05.30 WIB",
+      score: "98 (Mumtaz)",
+    },
+    {
+      id: "MRJ-02",
+      santri: "Ahmad Fauzan",
+      kelas: "Kelas Wustha 2",
+      juzRange: "Juz 28 s/d 30",
+      cycle: "Putaran Pekanan Ke-2",
+      statusMutqin: "MUTQIN",
+      testedBy: "Ustadz Syamsul Hadi",
+      lastTested: "Kemarin, 16.00 WIB",
+      score: "94 (Jayyid Jiddan)",
+    },
+    {
+      id: "MRJ-03",
+      santri: "Zulkifli Mansur",
+      kelas: "Kelas Wustha 1",
+      juzRange: "Juz 29 s/d 30",
+      cycle: "Putaran Pekanan Ke-1",
+      statusMutqin: "PERLU_PENGULANGAN",
+      testedBy: "Ustadz Zaid",
+      lastTested: "2 hari lalu",
+      score: "78 (Maqbul)",
+    },
+  ]);
+
+  // Tab 3: Halaqah Saya State
+  const [halaqahGroups, setHalaqahGroups] = useState([
+    {
+      id: "HLQ-01",
+      name: "Halaqah Al-Fatihah (Tingkat Mutqin)",
+      mentor: "Ustadz Ahmad Fauzi, Lc.",
+      location: "Masjid Utama Sayap Kanan",
+      schedule: "Ba'da Shubuh & Ba'da Ashar",
+      totalSantri: 16,
+      avgJuz: "18 Juz",
+      targetSemester: "Khatam 30 Juz",
+    },
+    {
+      id: "HLQ-02",
+      name: "Halaqah Al-Baqarah (Ziyadah Intensif)",
+      mentor: "Ustadz Zaid Al-Banjari",
+      location: "Serambi Masjid Lt. 2",
+      schedule: "Ba'da Shubuh & Ba'da Maghrib",
+      totalSantri: 15,
+      avgJuz: "8 Juz",
+      targetSemester: "+4 Juz Baru",
+    },
+    {
+      id: "HLQ-03",
+      name: "Halaqah An-Nur (Pemula & Tajwid)",
+      mentor: "Ustadz Mansur, M.Pd.",
+      location: "Ruang Kelas Wustha 1",
+      schedule: "Ba'da Ashar & Ba'da Isya'",
+      totalSantri: 14,
+      avgJuz: "2 Juz",
+      targetSemester: "Mutqin Juz 30 & 29",
+    },
+  ]);
+
+  // Tab 4: Target Hafalan Capaian 30 Juz State
+  const [targetCapaians] = useState([
+    {
+      id: "TGT-01",
+      santri: "Muhammad Fatih",
+      kelas: "Kelas Ulya 2",
+      currentJuz: 28,
+      targetJuz: 30,
+      percentage: 93,
+      status: "ON_TRACK",
+      remainingAyah: "2 Juz (Surah Al-Mulk s/d An-Nas)",
+    },
+    {
+      id: "TGT-02",
+      santri: "Rizky Ramadhan",
+      kelas: "Kelas Wustha 3",
+      currentJuz: 16,
+      targetJuz: 20,
+      percentage: 80,
+      status: "ON_TRACK",
+      remainingAyah: "4 Juz Menuju Target Semester",
+    },
+    {
+      id: "TGT-03",
+      santri: "Bilal Ibnu Rabah",
+      kelas: "Kelas Wustha 2",
+      currentJuz: 6,
+      targetJuz: 10,
+      percentage: 60,
+      status: "BUTUH_BIMBINGAN",
+      remainingAyah: "4 Juz Tertinggal dari Silabus",
+    },
+    {
+      id: "TGT-04",
+      santri: "Zulkifli Mansur",
+      kelas: "Kelas Wustha 1",
+      currentJuz: 3,
+      targetJuz: 5,
+      percentage: 60,
+      status: "ON_TRACK",
+      remainingAyah: "2 Juz Menuju Ujian Tasmi' Juz 30-28",
+    },
+  ]);
+
+  // Tab 5: Ujian & Tasmi' Juz State
+  const [ujianTasmiList, setUjianTasmiList] = useState([
+    {
+      id: "TSM-01",
+      santri: "Muhammad Fatih",
+      program: "Tasmi' 5 Juz Sekali Duduk (Juz 21-25)",
+      date: "25 September 2026, 08.00 WIB",
+      examiner: "Dewan Asatidz & Kiai",
+      status: "TERJADWAL",
+      result: "-",
+    },
+    {
+      id: "TSM-02",
+      santri: "Ahmad Fauzan",
+      program: "Ujian Sima'an Juz 30 Bil-Ghaib",
+      date: "20 September 2026",
+      examiner: "Ustadz Ahmad Fauzi, Lc.",
+      status: "LULUS_MUMTAZ",
+      result: "Nilai: 96 (Mumtaz Syahadah)",
+    },
+    {
+      id: "TSM-03",
+      santri: "Rizky Ramadhan",
+      program: "Tasmi' 10 Juz Sekali Duduk (Juz 1-10)",
+      date: "15 September 2026",
+      examiner: "KH. Abdullah Munir",
+      status: "LULUS_MUMTAZ",
+      result: "Nilai: 98 (Syahadah Mutqin)",
+    },
+  ]);
+
   const handleAddSetoran = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -169,119 +315,286 @@ export default function TahfizhClient({ tenantName }: TahfizhClientProps) {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Form Quick Setoran */}
-        <Card className="p-5 border-slate-200 shadow-sm space-y-4 h-fit">
-          <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-            <PlusCircle className="w-4 h-4 text-emerald-600" />
-            Input Setoran Santri
-          </h3>
-          <form onSubmit={handleAddSetoran} className="space-y-3 text-xs">
-            <div>
-              <label className="block text-slate-600 font-semibold mb-1">Nama Santri</label>
-              <input
-                type="text"
-                name="santri"
-                required
-                placeholder="Contoh: Ahmad Fauzan"
-                className="w-full p-2.5 rounded-xl border border-slate-200 bg-white"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
+      {/* Tab 1: Setoran Ziyadah Harian */}
+      {activeTab === "setoran" && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Form Quick Setoran */}
+          <Card className="p-5 border-slate-200 shadow-sm space-y-4 h-fit">
+            <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <PlusCircle className="w-4 h-4 text-emerald-600" />
+              Input Setoran Santri
+            </h3>
+            <form onSubmit={handleAddSetoran} className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-600 font-semibold mb-1">Juz</label>
+                <label className="block text-slate-600 font-semibold mb-1">Nama Santri</label>
                 <input
-                  type="number"
-                  name="juz"
-                  min="1"
-                  max="30"
+                  type="text"
+                  name="santri"
                   required
-                  placeholder="Juz 1-30"
+                  placeholder="Contoh: Ahmad Fauzan"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 bg-white"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-slate-600 font-semibold mb-1">Juz</label>
+                  <input
+                    type="number"
+                    name="juz"
+                    min="1"
+                    max="30"
+                    required
+                    placeholder="Juz 1-30"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-600 font-semibold mb-1">Jenis</label>
+                  <select name="type" className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium">
+                    <option value="ZIYADAH">Ziyadah (Baru)</option>
+                    <option value="MURAJAAH">Muraja&apos;ah</option>
+                    <option value="TASMI">Tasmi&apos; Ujian</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-slate-600 font-semibold mb-1">Surah & Rentang Ayat</label>
+                <input
+                  type="text"
+                  name="surah"
+                  required
+                  placeholder="Contoh: An-Nur ayat 1-20"
                   className="w-full p-2.5 rounded-xl border border-slate-200 bg-white"
                 />
               </div>
               <div>
-                <label className="block text-slate-600 font-semibold mb-1">Jenis</label>
-                <select name="type" className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium">
-                  <option value="ZIYADAH">Ziyadah (Baru)</option>
-                  <option value="MURAJAAH">Muraja&apos;ah</option>
-                  <option value="TASMI">Tasmi&apos; Ujian</option>
+                <label className="block text-slate-600 font-semibold mb-1">Nilai & Predikat</label>
+                <select name="grade" className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium">
+                  <option value="Mumtaz (A)">Mumtaz (A) - Lancar & Tajwid Tepat</option>
+                  <option value="Jayyid Jiddan (B+)">Jayyid Jiddan (B+) - Baik Sekali</option>
+                  <option value="Jayyid (B)">Jayyid (B) - Cukup Lancar</option>
+                  <option value="Maqbul (C)">Maqbul (C) - Perlu Diulang</option>
                 </select>
               </div>
-            </div>
+              <button
+                type="submit"
+                className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md flex items-center justify-center gap-1.5 pt-2"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Simpan Catatan Setoran</span>
+              </button>
+            </form>
+          </Card>
+
+          {/* List Setoran Terbaru */}
+          <div className="lg:col-span-2 space-y-3">
+            <Card className="p-0 overflow-hidden border-slate-200 shadow-sm">
+              <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                <h4 className="font-bold text-xs text-slate-800">Riwayat Setoran Terbaru</h4>
+                <span className="text-[11px] text-slate-500">Live Sinkronisasi</span>
+              </div>
+              <div className="divide-y divide-slate-100">
+                {records.map((r) => (
+                  <div key={r.id} className="p-4 hover:bg-slate-50 transition-colors flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-xs text-slate-900">{r.santri}</span>
+                        <Badge variant="outline" className="text-[10px]">Juz {r.juz}</Badge>
+                        <Badge variant={r.type === "ZIYADAH" ? "success" : "info"} className="text-[10px]">{r.type}</Badge>
+                      </div>
+                      <p className="text-xs text-slate-700 font-medium">📖 {r.surah}</p>
+                      <p className="text-[11px] text-slate-400">Penguji: {r.mentor} • {r.date}</p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Badge variant="success" className="text-[10px] font-bold">
+                        {r.grade}
+                      </Badge>
+                      <button
+                        onClick={() => setEditingSetoran(r)}
+                        title="Edit Setoran"
+                        className="p-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 transition-colors border border-indigo-200"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteSetoran(r.id, r.santri)}
+                        title="Hapus Setoran"
+                        className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors border border-rose-200"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {/* Tab 2: Muraja'ah Berkala */}
+      {activeTab === "murajaah" && (
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <label className="block text-slate-600 font-semibold mb-1">Surah & Rentang Ayat</label>
-              <input
-                type="text"
-                name="surah"
-                required
-                placeholder="Contoh: An-Nur ayat 1-20"
-                className="w-full p-2.5 rounded-xl border border-slate-200 bg-white"
-              />
-            </div>
-            <div>
-              <label className="block text-slate-600 font-semibold mb-1">Nilai & Predikat</label>
-              <select name="grade" className="w-full p-2.5 rounded-xl border border-slate-200 bg-white font-medium">
-                <option value="Mumtaz (A)">Mumtaz (A) - Lancar & Tajwid Tepat</option>
-                <option value="Jayyid Jiddan (B+)">Jayyid Jiddan (B+) - Baik Sekali</option>
-                <option value="Jayyid (B)">Jayyid (B) - Cukup Lancar</option>
-                <option value="Maqbul (C)">Maqbul (C) - Perlu Diulang</option>
-              </select>
+              <h3 className="font-bold text-base text-slate-900 tracking-tight">Putaran Muraja&apos;ah Berkala Santri</h3>
+              <p className="text-xs text-slate-500">Pemeliharaan hafalan mutqin santri per putaran mingguan / bulanan.</p>
             </div>
             <button
-              type="submit"
-              className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md flex items-center justify-center gap-1.5 pt-2"
+              onClick={() => {
+                setFeedback("Fitur jadwal putaran muraja'ah otomatis aktif.");
+                setTimeout(() => setFeedback(null), 3000);
+              }}
+              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs flex items-center gap-1.5 self-start sm:self-auto"
             >
-              <CheckCircle2 className="w-4 h-4" />
-              <span>Simpan Catatan Setoran</span>
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              <span>Verifikasi Pekanan</span>
             </button>
-          </form>
-        </Card>
+          </div>
 
-        {/* List Setoran Terbaru */}
-        <div className="lg:col-span-2 space-y-3">
-          <Card className="p-0 overflow-hidden border-slate-200 shadow-sm">
-            <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-              <h4 className="font-bold text-xs text-slate-800">Riwayat Setoran Terbaru</h4>
-              <span className="text-[11px] text-slate-500">Live Sinkronisasi</span>
-            </div>
-            <div className="divide-y divide-slate-100">
-              {records.map((r) => (
-                <div key={r.id} className="p-4 hover:bg-slate-50 transition-colors flex items-start justify-between gap-3">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-xs text-slate-900">{r.santri}</span>
-                      <Badge variant="outline" className="text-[10px]">Juz {r.juz}</Badge>
-                      <Badge variant={r.type === "ZIYADAH" ? "success" : "info"} className="text-[10px]">{r.type}</Badge>
-                    </div>
-                    <p className="text-xs text-slate-700 font-medium">📖 {r.surah}</p>
-                    <p className="text-[11px] text-slate-400">Penguji: {r.mentor} • {r.date}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {murajaahList.map((m) => (
+              <Card key={m.id} className="p-4 border-slate-200 hover:border-emerald-200 transition-all space-y-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="font-bold text-xs text-slate-900">{m.santri}</h4>
+                    <p className="text-[11px] text-slate-500">{m.kelas}</p>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <Badge variant="success" className="text-[10px] font-bold">
-                      {r.grade}
+                  <Badge variant={m.statusMutqin === "MUTQIN" ? "success" : "warning"} className="text-[10px]">
+                    {m.statusMutqin === "MUTQIN" ? "MUTQIN" : "PERLU DIULANG"}
+                  </Badge>
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs space-y-1">
+                  <p className="font-semibold text-slate-800">Rentang: {m.juzRange}</p>
+                  <p className="text-slate-600 text-[11px]">{m.cycle}</p>
+                  <p className="text-emerald-700 font-bold text-[11px]">{m.score}</p>
+                </div>
+
+                <div className="text-[10px] text-slate-400 flex items-center justify-between pt-1 border-t border-slate-100">
+                  <span>Penguji: {m.testedBy}</span>
+                  <span>{m.lastTested}</span>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 3: Halaqah Saya */}
+      {activeTab === "halaqah" && (
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="font-bold text-base text-slate-900 tracking-tight">Kelompok Halaqah Bimbingan</h3>
+              <p className="text-xs text-slate-500">Distribusi rombel halaqah tahfizh dan musyrif pengampu.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {halaqahGroups.map((h) => (
+              <Card key={h.id} className="p-5 border-slate-200 hover:shadow-md transition-all space-y-3">
+                <div className="flex items-center justify-between">
+                  <Badge variant="outline" className="text-[10px] font-mono">{h.id}</Badge>
+                  <Badge variant="info" className="text-[10px]">{h.totalSantri} Santri</Badge>
+                </div>
+                <h4 className="font-bold text-sm text-slate-900">{h.name}</h4>
+                <div className="space-y-1 text-xs text-slate-600">
+                  <p>👤 <strong>Pembimbing:</strong> {h.mentor}</p>
+                  <p>📍 <strong>Lokasi:</strong> {h.location}</p>
+                  <p>⏰ <strong>Waktu:</strong> {h.schedule}</p>
+                </div>
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-emerald-700">
+                  <span>Rata-rata: {h.avgJuz}</span>
+                  <span>Target: {h.targetSemester}</span>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 4: Target Hafalan */}
+      {activeTab === "target" && (
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="font-bold text-base text-slate-900 tracking-tight">Monitoring Target Capaian 30 Juz</h3>
+              <p className="text-xs text-slate-500">Progres hafalan santri terhadap target kurikulum pesantren.</p>
+            </div>
+          </div>
+
+          <Card className="p-0 overflow-hidden border-slate-200">
+            <div className="divide-y divide-slate-100">
+              {targetCapaians.map((t) => (
+                <div key={t.id} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-slate-50 transition-colors">
+                  <div className="space-y-1 md:w-1/3">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-xs text-slate-900">{t.santri}</span>
+                      <span className="text-[10px] text-slate-500">• {t.kelas}</span>
+                    </div>
+                    <p className="text-xs text-slate-600">{t.remainingAyah}</p>
+                  </div>
+
+                  <div className="flex-1 max-w-xs space-y-1.5">
+                    <div className="flex items-center justify-between text-xs font-semibold">
+                      <span className="text-slate-700">{t.currentJuz} dari {t.targetJuz} Juz</span>
+                      <span className="text-emerald-700">{t.percentage}%</span>
+                    </div>
+                    <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                      <div className="bg-emerald-600 h-2 rounded-full transition-all" style={{ width: `${t.percentage}%` }}></div>
+                    </div>
+                  </div>
+
+                  <div className="shrink-0">
+                    <Badge variant={t.status === "ON_TRACK" ? "success" : "warning"} className="text-[10px]">
+                      {t.status === "ON_TRACK" ? "SESUAI TARGET" : "BUTUH BIMBINGAN"}
                     </Badge>
-                    <button
-                      onClick={() => setEditingSetoran(r)}
-                      title="Edit Setoran"
-                      className="p-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 transition-colors border border-indigo-200"
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteSetoran(r.id, r.santri)}
-                      title="Hapus Setoran"
-                      className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors border border-rose-200"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
                   </div>
                 </div>
               ))}
             </div>
           </Card>
         </div>
-      </div>
+      )}
+
+      {/* Tab 5: Ujian & Tasmi' */}
+      {activeTab === "ujian" && (
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="font-bold text-base text-slate-900 tracking-tight">Jadwal Ujian Tasmi&apos; & Sima&apos;an Juz</h3>
+              <p className="text-xs text-slate-500">Ujian sertifikasi hafalan Al-Qur&apos;an bil-ghaib sekali duduk.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {ujianTasmiList.map((u) => (
+              <Card key={u.id} className="p-4 border-slate-200 hover:shadow-md transition-all space-y-3">
+                <div className="flex items-start justify-between">
+                  <Badge variant="outline" className="text-[10px] font-mono">{u.id}</Badge>
+                  <Badge variant={u.status.startsWith("LULUS") ? "success" : "warning"} className="text-[10px]">
+                    {u.status === "TERJADWAL" ? "TERJADWAL" : "LULUS SYAHADAH"}
+                  </Badge>
+                </div>
+                <div>
+                  <h4 className="font-bold text-xs text-slate-900">{u.santri}</h4>
+                  <p className="text-xs text-emerald-800 font-semibold mt-0.5">{u.program}</p>
+                </div>
+                <div className="text-[11px] text-slate-500 space-y-0.5">
+                  <p>📅 {u.date}</p>
+                  <p>Penguji: {u.examiner}</p>
+                </div>
+                {u.result !== "-" && (
+                  <div className="pt-2 border-t border-slate-100 text-xs font-bold text-emerald-700">
+                    {u.result}
+                  </div>
+                )}
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Modal Edit Setoran */}
       {editingSetoran && (

@@ -16,7 +16,7 @@ export async function recordTahfizhAction(input: RecordTahfizhInput) {
       return { success: false, error: "Modul Tahfizh belum aktif untuk pesantren ini." };
     }
 
-    requirePermission(session, "hafalan.create");
+    requirePermission(session, "tahfizh.input");
 
     const parsed = recordTahfizhSchema.safeParse(input);
     if (!parsed.success) {
@@ -45,6 +45,7 @@ export async function recordTahfizhAction(input: RecordTahfizhInput) {
       },
     });
 
+    revalidatePath("/dashboard/tahfizh");
     revalidatePath("/dashboard/activities");
     revalidatePath("/dashboard/santri");
     revalidatePath("/dashboard");

@@ -21,7 +21,7 @@ export async function createPermitAction(input: CreatePermitInput) {
       return { success: false, error: "Modul Perizinan belum aktif untuk pesantren ini." };
     }
 
-    requirePermission(session, "permission.request");
+    requirePermission(session, "permits.view");
 
     const parsed = createPermitSchema.safeParse(input);
     if (!parsed.success) {
@@ -42,6 +42,7 @@ export async function createPermitAction(input: CreatePermitInput) {
       newData: { studentId: permit.studentId, type: permit.type, reason: permit.reason },
     });
 
+    revalidatePath("/dashboard/perizinan");
     revalidatePath("/dashboard/activities");
     revalidatePath("/dashboard");
     return { success: true, data: permit };
@@ -59,7 +60,7 @@ export async function updatePermitStatusAction(input: UpdatePermitStatusInput) {
       return { success: false, error: "Modul Perizinan belum aktif untuk pesantren ini." };
     }
 
-    requirePermission(session, "permission.approve");
+    requirePermission(session, "permits.approve");
 
     const parsed = updatePermitStatusSchema.safeParse(input);
     if (!parsed.success) {
@@ -84,6 +85,7 @@ export async function updatePermitStatusAction(input: UpdatePermitStatusInput) {
       newData: { status: updated.status, approvedById: session.user.id },
     });
 
+    revalidatePath("/dashboard/perizinan");
     revalidatePath("/dashboard/activities");
     revalidatePath("/dashboard");
     return { success: true, data: updated };

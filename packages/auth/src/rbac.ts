@@ -25,12 +25,47 @@ export function hasAssignment(session: AuthSession, assignment: string): boolean
 }
 
 /**
+ * Permission aliases dictionary to prevent mismatches between modules and server actions
+ */
+const PERMISSION_ALIASES: Record<string, string[]> = {
+  "students.update": ["students.edit", "students.update"],
+  "students.edit": ["students.update", "students.edit"],
+  "hafalan.create": ["tahfizh.input", "tahfizh.setoran.create", "tahfizh.create", "hafalan.create"],
+  "tahfizh.input": ["hafalan.create", "tahfizh.input", "tahfizh.setoran.create"],
+  "permission.request": ["permits.create", "permits.view", "permits.request", "permission.request"],
+  "permits.create": ["permission.request", "permits.create", "permits.view"],
+  "permission.approve": ["permits.approve", "permission.approve"],
+  "permits.approve": ["permission.approve", "permits.approve"],
+  "permission.view": ["permits.view", "permission.view"],
+  "permits.view": ["permission.view", "permits.view"],
+};
+
+/**
  * Checks if current user has a specific permission key
  */
 export function hasPermission(session: AuthSession, permissionKey: string): boolean {
-  if (session.role.isSuperAdmin) return true;
-  if (session.role.name === "OWNER" || session.role.name === "KIAI") return true; // Owner/Kiai has all permissions within their tenant
-  return session.permissions.includes(permissionKey);
+  if (!session) return false;
+  if (session.role?.isSuperAdmin) return true;
+  if (session.role?.name === "OWNER" || session.role?.name === "KIAI") return true; // Owner/Kiai has all permissions within their tenant
+  if (!session.permissions || !Array.isArray(session.permissions)) return false;
+
+  // Wildcard permissions
+  if (session.permissions.includes("*") || session.permissions.includes("all")) return true;
+
+  // Direct match
+  if (session.permissions.includes(permissionKey)) return true;
+
+  // Scope wildcard match e.g. "students.*"
+  const [scope] = permissionKey.split(".");
+  if (scope && session.permissions.includes(`${scope}.*`)) return true;
+
+  // Alias lookup
+  const aliases = PERMISSION_ALIASES[permissionKey];
+  if (aliases && aliases.some((alias) => session.permissions.includes(alias))) {
+    return true;
+  }
+
+  return false;
 }
 
 /**

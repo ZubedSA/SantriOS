@@ -1,4 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+import * as dns from "dns";
+
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder("ipv4first");
+}
 
 declare global {
   // Allow global `var` declarations in TypeScript

@@ -18,6 +18,17 @@ export function createTenantDb(tenantId: string) {
     // 1. Tenant & Organization
     // =========================================================
     getTenant: async () => {
+      if (tenantId.startsWith("demo-")) {
+        return {
+          id: tenantId,
+          slug: "al-hikmah",
+          name: "Pondok Pesantren Al-Hikmah Modern",
+          logoUrl: null,
+          tenantModules: [],
+          subscriptions: [],
+        } as any;
+      }
+
       const tenant = await prisma.tenant.findUnique({
         where: { id: tenantId },
         include: {
@@ -126,29 +137,36 @@ export function createTenantDb(tenantId: string) {
             : {}),
         };
 
-        const [students, total] = await Promise.all([
-          prisma.student.findMany({
-            where,
-            include: {
-              classroom: true,
-              dormitoryRoom: true,
-              invoices: {
-                where: { status: { in: ["UNPAID", "OVERDUE"] } },
-                select: { id: true, amount: true, status: true },
+        try {
+          const [students, total] = await Promise.all([
+            prisma.student.findMany({
+              where,
+              include: {
+                classroom: true,
+                dormitoryRoom: true,
+                invoices: {
+                  where: { status: { in: ["UNPAID", "OVERDUE"] } },
+                  select: { id: true, amount: true, status: true },
+                },
+                hafalanRecords: {
+                  take: 1,
+                  orderBy: { createdAt: "desc" },
+                },
               },
-              hafalanRecords: {
-                take: 1,
-                orderBy: { createdAt: "desc" },
-              },
-            },
-            orderBy: { name: "asc" },
-            skip: params?.skip ?? 0,
-            take: params?.take ?? 100,
-          }),
-          prisma.student.count({ where }),
-        ]);
+              orderBy: { name: "asc" },
+              skip: params?.skip ?? 0,
+              take: params?.take ?? 100,
+            }),
+            prisma.student.count({ where }),
+          ]);
 
-        return { students, total };
+          return { students, total };
+        } catch (err) {
+          if (tenantId.startsWith("demo-")) {
+            return { students: [], total: 0 };
+          }
+          throw err;
+        }
       },
 
       getById: async (id: string) => {
@@ -279,23 +297,47 @@ export function createTenantDb(tenantId: string) {
       },
 
       getClassrooms: async () => {
-        return prisma.classroom.findMany({
-          where: { tenantId },
-          include: {
-            _count: { select: { students: true } },
-          },
-          orderBy: { name: "asc" },
-        });
+        try {
+          return await prisma.classroom.findMany({
+            where: { tenantId },
+            include: {
+              _count: { select: { students: true } },
+            },
+            orderBy: { name: "asc" },
+          });
+        } catch (err) {
+          if (tenantId.startsWith("demo-")) {
+            return [
+              { id: "c-1", tenantId, name: "Kelas 7A - Tahfizh Intensif", gradeLevel: 7, capacity: 30, createdAt: new Date(), updatedAt: new Date(), _count: { students: 28 } },
+              { id: "c-2", tenantId, name: "Kelas 7B - Reguler", gradeLevel: 7, capacity: 30, createdAt: new Date(), updatedAt: new Date(), _count: { students: 26 } },
+              { id: "c-3", tenantId, name: "Kelas 8A - Tahfizh Intensif", gradeLevel: 8, capacity: 30, createdAt: new Date(), updatedAt: new Date(), _count: { students: 30 } },
+              { id: "c-4", tenantId, name: "Kelas 9A - Ulya", gradeLevel: 9, capacity: 30, createdAt: new Date(), updatedAt: new Date(), _count: { students: 25 } },
+            ] as any;
+          }
+          throw err;
+        }
       },
 
       getDormitoryRooms: async () => {
-        return prisma.dormitoryRoom.findMany({
-          where: { tenantId },
-          include: {
-            _count: { select: { students: true } },
-          },
-          orderBy: { name: "asc" },
-        });
+        try {
+          return await prisma.dormitoryRoom.findMany({
+            where: { tenantId },
+            include: {
+              _count: { select: { students: true } },
+            },
+            orderBy: { name: "asc" },
+          });
+        } catch (err) {
+          if (tenantId.startsWith("demo-")) {
+            return [
+              { id: "r-1", tenantId, name: "Kamar Abu Bakar Ash-Shiddiq", capacity: 15, gender: "LAKI_LAKI", createdAt: new Date(), updatedAt: new Date(), _count: { students: 12 } },
+              { id: "r-2", tenantId, name: "Kamar Umar bin Khattab", capacity: 15, gender: "LAKI_LAKI", createdAt: new Date(), updatedAt: new Date(), _count: { students: 14 } },
+              { id: "r-3", tenantId, name: "Kamar Utsman bin Affan", capacity: 15, gender: "LAKI_LAKI", createdAt: new Date(), updatedAt: new Date(), _count: { students: 12 } },
+              { id: "r-4", tenantId, name: "Kamar Ali bin Abi Thalib", capacity: 15, gender: "LAKI_LAKI", createdAt: new Date(), updatedAt: new Date(), _count: { students: 10 } },
+            ] as any;
+          }
+          throw err;
+        }
       },
     },
 
@@ -760,6 +802,82 @@ export function createTenantDb(tenantId: string) {
     // =========================================================
     dashboard: {
       getMetrics: async () => {
+        if (tenantId.startsWith("demo-")) {
+          return {
+            totalStudents: 148,
+            activeStudents: 142,
+            classroomsCount: 8,
+            roomsCount: 12,
+            financialSummary: {
+              income: 48500000,
+              expense: 32100000,
+              balance: 16400000,
+              unpaid: 6200000,
+            },
+            attendanceToday: {
+              total: 148,
+              hadir: 145,
+              rate: "98.0%",
+            },
+            pendingPermitsCount: 3,
+            recentHafalan: [
+              {
+                id: "hf-demo-1",
+                surah: "An-Naba'",
+                juz: 30,
+                grade: "MUMTAZ",
+                createdAt: new Date(),
+                student: { id: "s-1", name: "Ahmad Zaki", nis: "2024001" },
+              },
+              {
+                id: "hf-demo-2",
+                surah: "Al-Mulk",
+                juz: 29,
+                grade: "JAYYID_JIDDAN",
+                createdAt: new Date(Date.now() - 3600000),
+                student: { id: "s-2", name: "Muhammad Fikri", nis: "2024002" },
+              },
+              {
+                id: "hf-demo-3",
+                surah: "Yasin",
+                juz: 22,
+                grade: "MUMTAZ",
+                createdAt: new Date(Date.now() - 7200000),
+                student: { id: "s-3", name: "Siti Nurhaliza", nis: "2024003" },
+              },
+            ],
+            recentTransactions: [
+              {
+                id: "tx-demo-1",
+                type: "INCOME",
+                category: "SPP_BULANAN",
+                amount: 750000,
+                method: "TRANSFER",
+                createdAt: new Date(),
+                student: { id: "s-1", name: "Ahmad Zaki" },
+              },
+              {
+                id: "tx-demo-2",
+                type: "INCOME",
+                category: "DAFTAR_ULANG",
+                amount: 1500000,
+                method: "CASH",
+                createdAt: new Date(Date.now() - 5400000),
+                student: { id: "s-2", name: "Muhammad Fikri" },
+              },
+            ],
+            recentAuditLogs: [
+              {
+                id: "log-demo-1",
+                action: "USER_LOGIN",
+                entity: "User",
+                createdAt: new Date(),
+                user: { name: "KH. Abdullah Munir", email: "kiai@demo.local" },
+              },
+            ],
+          };
+        }
+
         const safe = async <T>(fn: () => Promise<T>, fallback: T): Promise<T> => {
           try {
             return await fn();

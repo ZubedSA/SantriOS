@@ -20,6 +20,9 @@ import {
   FileText,
   FileCheck,
   FileSpreadsheet,
+  Home,
+  Globe,
+  Layers,
 } from "lucide-react";
 import { RoleSwitcher } from "./components/role-switcher";
 import { MobileMenuTrigger } from "./components/mobile-menu-trigger";
@@ -565,6 +568,66 @@ export default async function DashboardLayout({
               <Link href="/dashboard/laporan" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
                 <FileText className="w-4 h-4 text-purple-400" />
                 <span>Laporan</span>
+              </Link>
+            </div>
+          )}
+
+          {/* 6. WALI SANTRI (Parent Portal Mode) */}
+          {session.role.name === "WALI_SANTRI" && (
+            <div className="space-y-1">
+              <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <Home className="w-4 h-4 text-emerald-400" />
+                <span>Beranda</span>
+              </Link>
+              <Link href="/dashboard/santri" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <Users className="w-4 h-4 text-sky-400" />
+                <span>Profil Anak Saya</span>
+              </Link>
+              <Link href="/dashboard/absensi" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <CheckCircle2 className="w-4 h-4 text-teal-400" />
+                <span>Kehadiran & Absensi</span>
+              </Link>
+              <Link href="/dashboard/finance" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <CreditCard className="w-4 h-4 text-amber-400" />
+                <span>Tagihan & SPP</span>
+              </Link>
+              <Link href="/dashboard/tahfizh" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <BookOpen className="w-4 h-4 text-emerald-400" />
+                <span>Mutaba&apos;ah Tahfizh</span>
+              </Link>
+              <Link href="/dashboard/perizinan" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <FileCheck className="w-4 h-4 text-rose-400" />
+                <span>Pengajuan Izin Pulang</span>
+              </Link>
+              <Link href="/dashboard/pengumuman" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <Bell className="w-4 h-4 text-amber-400" />
+                <span>Pengumuman Pondok</span>
+              </Link>
+            </div>
+          )}
+
+          {/* 7. SUPER ADMIN (SaaS Governance Mode) */}
+          {(session.role.name === "SUPER_ADMIN" || session.role.isSuperAdmin) && (
+            <div className="space-y-1">
+              <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <Globe className="w-4 h-4 text-emerald-400" />
+                <span>Overview Platform</span>
+              </Link>
+              <Link href="/dashboard/santri" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <Building className="w-4 h-4 text-teal-400" />
+                <span>Daftar Pesantren</span>
+              </Link>
+              <Link href="/modules" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <Layers className="w-4 h-4 text-purple-400" />
+                <span>Manajemen Modul Global</span>
+              </Link>
+              <Link href="/audit" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <ShieldAlert className="w-4 h-4 text-rose-400" />
+                <span>Audit Trail Keamanan</span>
+              </Link>
+              <Link href="/dashboard/pengguna" className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-white transition-colors">
+                <Users className="w-4 h-4 text-amber-400" />
+                <span>Pengguna Platform</span>
               </Link>
             </div>
           )}
