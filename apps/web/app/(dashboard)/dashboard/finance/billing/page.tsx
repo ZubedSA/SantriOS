@@ -33,8 +33,8 @@ export default async function BillingPage() {
       tenantDb.students.list({ take: 100 }),
     ]);
 
-    classrooms = dbClassrooms.map((c) => ({ id: c.id, name: c.name }));
-    studentsList = students.map((s) => ({
+    classrooms = dbClassrooms.map((c: any) => ({ id: c.id, name: c.name }));
+    studentsList = students.map((s: any) => ({
       id: s.id,
       name: s.name,
       nis: s.nis,

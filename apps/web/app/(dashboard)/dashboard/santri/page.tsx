@@ -30,12 +30,12 @@ export default async function SantriPage({
       tenantDb.students.getDormitoryRooms(),
     ]);
 
-    classrooms = dbClassrooms.map((c) => ({ id: c.id, name: c.name }));
-    rooms = dbRooms.map((r) => ({ id: r.id, name: r.name }));
+    classrooms = dbClassrooms.map((c: any) => ({ id: c.id, name: c.name }));
+    rooms = dbRooms.map((r: any) => ({ id: r.id, name: r.name }));
 
-    initialStudents = students.map((s) => {
-      const totalDue = s.invoices.reduce((sum, inv) => sum + inv.amount, 0);
-      const latestHafalan = s.hafalanRecords[0];
+    initialStudents = students.map((s: any) => {
+      const totalDue = (s.invoices || []).reduce((sum: number, inv: any) => sum + (inv.amount || 0), 0);
+      const latestHafalan = s.hafalanRecords?.[0];
 
       return {
         id: s.id,
@@ -81,8 +81,8 @@ export default async function SantriPage({
       tenantName={session.tenant.name}
       initialTab={initialTab}
       initialStudents={initialStudents}
-      classrooms={classrooms.map((c) => ({ id: c.id, name: c.name }))}
-      rooms={rooms.map((r) => ({ id: r.id, name: r.name }))}
+      classrooms={classrooms}
+      rooms={rooms}
       userRole={session.role.name}
     />
   );

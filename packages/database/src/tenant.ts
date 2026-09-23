@@ -296,7 +296,7 @@ export function createTenantDb(tenantId: string) {
         });
       },
 
-      getClassrooms: async () => {
+      getClassrooms: async (): Promise<Array<{ id: string; name: string; _count?: { students: number } }>> => {
         try {
           return await prisma.classroom.findMany({
             where: { tenantId },
@@ -308,17 +308,17 @@ export function createTenantDb(tenantId: string) {
         } catch (err) {
           if (tenantId.startsWith("demo-")) {
             return [
-              { id: "c-1", tenantId, name: "Kelas 7A - Tahfizh Intensif", gradeLevel: 7, capacity: 30, createdAt: new Date(), updatedAt: new Date(), _count: { students: 28 } },
-              { id: "c-2", tenantId, name: "Kelas 7B - Reguler", gradeLevel: 7, capacity: 30, createdAt: new Date(), updatedAt: new Date(), _count: { students: 26 } },
-              { id: "c-3", tenantId, name: "Kelas 8A - Tahfizh Intensif", gradeLevel: 8, capacity: 30, createdAt: new Date(), updatedAt: new Date(), _count: { students: 30 } },
-              { id: "c-4", tenantId, name: "Kelas 9A - Ulya", gradeLevel: 9, capacity: 30, createdAt: new Date(), updatedAt: new Date(), _count: { students: 25 } },
-            ] as any;
+              { id: "c-1", name: "Kelas 7A - Tahfizh Intensif", _count: { students: 28 } },
+              { id: "c-2", name: "Kelas 7B - Reguler", _count: { students: 26 } },
+              { id: "c-3", name: "Kelas 8A - Tahfizh Intensif", _count: { students: 30 } },
+              { id: "c-4", name: "Kelas 9A - Ulya", _count: { students: 25 } },
+            ];
           }
           throw err;
         }
       },
 
-      getDormitoryRooms: async () => {
+      getDormitoryRooms: async (): Promise<Array<{ id: string; name: string; _count?: { students: number } }>> => {
         try {
           return await prisma.dormitoryRoom.findMany({
             where: { tenantId },
